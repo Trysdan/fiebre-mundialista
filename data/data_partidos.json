@@ -1,0 +1,1538 @@
+{
+  "metadatos": {
+    "nombre_app": "Fiebre Mundialista",
+    "torneo": "XXIII Mundial USA/MEX/CAN 2026",
+    "zona_horaria": "VET (GMT-4)",
+    "descripcion": "Calendario completo del Mundial 2026"
+  },
+  "partidos": [
+    {
+      "partido_id": "G_A_P1",
+      "fase": "Fase de Grupos - Grupo A",
+      "fecha": "2026-06-11",
+      "hora": "15:00",
+      "casa": "México",
+      "fuera": "Sudáfrica",
+      "equipos": {
+        "local": "México",
+        "visitante": "Sudáfrica"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_A_P2",
+      "fase": "Fase de Grupos - Grupo A",
+      "fecha": "2026-06-11",
+      "hora": "22:00",
+      "casa": "Corea del Sur",
+      "fuera": "República Checa",
+      "equipos": {
+        "local": "Corea del Sur",
+        "visitante": "República Checa"
+      },
+      "estadio": "Estadio Akron",
+      "ciudad": "Guadalajara",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_A_P3",
+      "fase": "Fase de Grupos - Grupo A",
+      "fecha": "2026-06-18",
+      "hora": "12:00",
+      "casa": "República Checa",
+      "fuera": "Sudáfrica",
+      "equipos": {
+        "local": "República Checa",
+        "visitante": "Sudáfrica"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_A_P4",
+      "fase": "Fase de Grupos - Grupo A",
+      "fecha": "2026-06-18",
+      "hora": "21:00",
+      "casa": "México",
+      "fuera": "Corea del Sur",
+      "equipos": {
+        "local": "México",
+        "visitante": "Corea del Sur"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_A_P5",
+      "fase": "Fase de Grupos - Grupo A",
+      "fecha": "2026-06-24",
+      "hora": "21:00",
+      "casa": "República Checa",
+      "fuera": "México",
+      "equipos": {
+        "local": "República Checa",
+        "visitante": "México"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_A_P6",
+      "fase": "Fase de Grupos - Grupo A",
+      "fecha": "2026-06-24",
+      "hora": "21:00",
+      "casa": "Sudáfrica",
+      "fuera": "Corea del Sur",
+      "equipos": {
+        "local": "Sudáfrica",
+        "visitante": "Corea del Sur"
+      },
+      "estadio": "Estadio Akron",
+      "ciudad": "Guadalajara",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_B_P1",
+      "fase": "Fase de Grupos - Grupo B",
+      "fecha": "2026-06-12",
+      "hora": "15:00",
+      "casa": "Canadá",
+      "fuera": "Bosnia y Herzegovina",
+      "equipos": {
+        "local": "Canadá",
+        "visitante": "Bosnia y Herzegovina"
+      },
+      "estadio": "BMO Field",
+      "ciudad": "Toronto",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_B_P2",
+      "fase": "Fase de Grupos - Grupo B",
+      "fecha": "2026-06-13",
+      "hora": "15:00",
+      "casa": "Catar",
+      "fuera": "Suiza",
+      "equipos": {
+        "local": "Catar",
+        "visitante": "Suiza"
+      },
+      "estadio": "Levi's Stadium",
+      "ciudad": "San Francisco",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_B_P3",
+      "fase": "Fase de Grupos - Grupo B",
+      "fecha": "2026-06-18",
+      "hora": "15:00",
+      "casa": "Suiza",
+      "fuera": "Bosnia y Herzegovina",
+      "equipos": {
+        "local": "Suiza",
+        "visitante": "Bosnia y Herzegovina"
+      },
+      "estadio": "BMO Field",
+      "ciudad": "Toronto",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_B_P4",
+      "fase": "Fase de Grupos - Grupo B",
+      "fecha": "2026-06-18",
+      "hora": "18:00",
+      "casa": "Canadá",
+      "fuera": "Catar",
+      "equipos": {
+        "local": "Canadá",
+        "visitante": "Catar"
+      },
+      "estadio": "BC Place",
+      "ciudad": "Vancouver",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_B_P5",
+      "fase": "Fase de Grupos - Grupo B",
+      "fecha": "2026-06-24",
+      "hora": "15:00",
+      "casa": "Suiza",
+      "fuera": "Canadá",
+      "equipos": {
+        "local": "Suiza",
+        "visitante": "Canadá"
+      },
+      "estadio": "BMO Field",
+      "ciudad": "Toronto",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_B_P6",
+      "fase": "Fase de Grupos - Grupo B",
+      "fecha": "2026-06-24",
+      "hora": "15:00",
+      "casa": "Bosnia y Herzegovina",
+      "fuera": "Catar",
+      "equipos": {
+        "local": "Bosnia y Herzegovina",
+        "visitante": "Catar"
+      },
+      "estadio": "Levi's Stadium",
+      "ciudad": "San Francisco",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_C_P1",
+      "fase": "Fase de Grupos - Grupo C",
+      "fecha": "2026-06-13",
+      "hora": "18:00",
+      "casa": "Brasil",
+      "fuera": "Marruecos",
+      "equipos": {
+        "local": "Brasil",
+        "visitante": "Marruecos"
+      },
+      "estadio": "MetLife Stadium",
+      "ciudad": "Nueva York",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_C_P2",
+      "fase": "Fase de Grupos - Grupo C",
+      "fecha": "2026-06-13",
+      "hora": "21:00",
+      "casa": "Haití",
+      "fuera": "Escocia",
+      "equipos": {
+        "local": "Haití",
+        "visitante": "Escocia"
+      },
+      "estadio": "Gillette Stadium",
+      "ciudad": "Boston",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_C_P3",
+      "fase": "Fase de Grupos - Grupo C",
+      "fecha": "2026-06-19",
+      "hora": "18:00",
+      "casa": "Escocia",
+      "fuera": "Marruecos",
+      "equipos": {
+        "local": "Escocia",
+        "visitante": "Marruecos"
+      },
+      "estadio": "MetLife Stadium",
+      "ciudad": "Nueva York",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_C_P4",
+      "fase": "Fase de Grupos - Grupo C",
+      "fecha": "2026-06-19",
+      "hora": "20:30",
+      "casa": "Brasil",
+      "fuera": "Haití",
+      "equipos": {
+        "local": "Brasil",
+        "visitante": "Haití"
+      },
+      "estadio": "Gillette Stadium",
+      "ciudad": "Boston",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_C_P5",
+      "fase": "Fase de Grupos - Grupo C",
+      "fecha": "2026-06-24",
+      "hora": "18:00",
+      "casa": "Escocia",
+      "fuera": "Brasil",
+      "equipos": {
+        "local": "Escocia",
+        "visitante": "Brasil"
+      },
+      "estadio": "MetLife Stadium",
+      "ciudad": "Nueva York",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_C_P6",
+      "fase": "Fase de Grupos - Grupo C",
+      "fecha": "2026-06-24",
+      "hora": "18:00",
+      "casa": "Marruecos",
+      "fuera": "Haití",
+      "equipos": {
+        "local": "Marruecos",
+        "visitante": "Haití"
+      },
+      "estadio": "Gillette Stadium",
+      "ciudad": "Boston",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_D_P1",
+      "fase": "Fase de Grupos - Grupo D",
+      "fecha": "2026-06-12",
+      "hora": "21:00",
+      "casa": "Estados Unidos",
+      "fuera": "Paraguay",
+      "equipos": {
+        "local": "Estados Unidos",
+        "visitante": "Paraguay"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_D_P2",
+      "fase": "Fase de Grupos - Grupo D",
+      "fecha": "2026-06-14",
+      "hora": "00:00",
+      "casa": "Australia",
+      "fuera": "Turquía",
+      "equipos": {
+        "local": "Australia",
+        "visitante": "Turquía"
+      },
+      "estadio": "BC Place",
+      "ciudad": "Vancouver",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_D_P3",
+      "fase": "Fase de Grupos - Grupo D",
+      "fecha": "2026-06-19",
+      "hora": "15:00",
+      "casa": "Estados Unidos",
+      "fuera": "Australia",
+      "equipos": {
+        "local": "Estados Unidos",
+        "visitante": "Australia"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_D_P4",
+      "fase": "Fase de Grupos - Grupo D",
+      "fecha": "2026-06-19",
+      "hora": "23:00",
+      "casa": "Turquía",
+      "fuera": "Paraguay",
+      "equipos": {
+        "local": "Turquía",
+        "visitante": "Paraguay"
+      },
+      "estadio": "BC Place",
+      "ciudad": "Vancouver",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_D_P5",
+      "fase": "Fase de Grupos - Grupo D",
+      "fecha": "2026-06-25",
+      "hora": "22:00",
+      "casa": "Turquía",
+      "fuera": "Estados Unidos",
+      "equipos": {
+        "local": "Turquía",
+        "visitante": "Estados Unidos"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_D_P6",
+      "fase": "Fase de Grupos - Grupo D",
+      "fecha": "2026-06-25",
+      "hora": "22:00",
+      "casa": "Paraguay",
+      "fuera": "Australia",
+      "equipos": {
+        "local": "Paraguay",
+        "visitante": "Australia"
+      },
+      "estadio": "BC Place",
+      "ciudad": "Vancouver",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_E_P1",
+      "fase": "Fase de Grupos - Grupo E",
+      "fecha": "2026-06-14",
+      "hora": "13:00",
+      "casa": "Alemania",
+      "fuera": "Curazao",
+      "equipos": {
+        "local": "Alemania",
+        "visitante": "Curazao"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_E_P2",
+      "fase": "Fase de Grupos - Grupo E",
+      "fecha": "2026-06-14",
+      "hora": "19:00",
+      "casa": "Costa de Marfil",
+      "fuera": "Ecuador",
+      "equipos": {
+        "local": "Costa de Marfil",
+        "visitante": "Ecuador"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_E_P3",
+      "fase": "Fase de Grupos - Grupo E",
+      "fecha": "2026-06-20",
+      "hora": "16:00",
+      "casa": "Alemania",
+      "fuera": "Costa de Marfil",
+      "equipos": {
+        "local": "Alemania",
+        "visitante": "Costa de Marfil"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_E_P4",
+      "fase": "Fase de Grupos - Grupo E",
+      "fecha": "2026-06-20",
+      "hora": "20:00",
+      "casa": "Ecuador",
+      "fuera": "Curazao",
+      "equipos": {
+        "local": "Ecuador",
+        "visitante": "Curazao"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_E_P5",
+      "fase": "Fase de Grupos - Grupo E",
+      "fecha": "2026-06-25",
+      "hora": "16:00",
+      "casa": "Curazao",
+      "fuera": "Costa de Marfil",
+      "equipos": {
+        "local": "Curazao",
+        "visitante": "Costa de Marfil"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_E_P6",
+      "fase": "Fase de Grupos - Grupo E",
+      "fecha": "2026-06-25",
+      "hora": "16:00",
+      "casa": "Ecuador",
+      "fuera": "Alemania",
+      "equipos": {
+        "local": "Ecuador",
+        "visitante": "Alemania"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_F_P1",
+      "fase": "Fase de Grupos - Grupo F",
+      "fecha": "2026-06-14",
+      "hora": "16:00",
+      "casa": "Países Bajos",
+      "fuera": "Japón",
+      "equipos": {
+        "local": "Países Bajos",
+        "visitante": "Japón"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_F_P2",
+      "fase": "Fase de Grupos - Grupo F",
+      "fecha": "2026-06-14",
+      "hora": "22:00",
+      "casa": "Suecia",
+      "fuera": "Túnez",
+      "equipos": {
+        "local": "Suecia",
+        "visitante": "Túnez"
+      },
+      "estadio": "Estadio BBVA",
+      "ciudad": "Monterrey",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_F_P3",
+      "fase": "Fase de Grupos - Grupo F",
+      "fecha": "2026-06-20",
+      "hora": "13:00",
+      "casa": "Países Bajos",
+      "fuera": "Suecia",
+      "equipos": {
+        "local": "Países Bajos",
+        "visitante": "Suecia"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_F_P4",
+      "fase": "Fase de Grupos - Grupo F",
+      "fecha": "2026-06-21",
+      "hora": "00:00",
+      "casa": "Túnez",
+      "fuera": "Japón",
+      "equipos": {
+        "local": "Túnez",
+        "visitante": "Japón"
+      },
+      "estadio": "Estadio BBVA",
+      "ciudad": "Monterrey",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_F_P5",
+      "fase": "Fase de Grupos - Grupo F",
+      "fecha": "2026-06-25",
+      "hora": "19:00",
+      "casa": "Japón",
+      "fuera": "Suecia",
+      "equipos": {
+        "local": "Japón",
+        "visitante": "Suecia"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_F_P6",
+      "fase": "Fase de Grupos - Grupo F",
+      "fecha": "2026-06-25",
+      "hora": "19:00",
+      "casa": "Túnez",
+      "fuera": "Países Bajos",
+      "equipos": {
+        "local": "Túnez",
+        "visitante": "Países Bajos"
+      },
+      "estadio": "Estadio BBVA",
+      "ciudad": "Monterrey",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_G_P1",
+      "fase": "Fase de Grupos - Grupo G",
+      "fecha": "2026-06-15",
+      "hora": "15:00",
+      "casa": "Bélgica",
+      "fuera": "Egipto",
+      "equipos": {
+        "local": "Bélgica",
+        "visitante": "Egipto"
+      },
+      "estadio": "Mercedes-Benz Stadium",
+      "ciudad": "Atlanta",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_G_P2",
+      "fase": "Fase de Grupos - Grupo G",
+      "fecha": "2026-06-15",
+      "hora": "21:00",
+      "casa": "Irán",
+      "fuera": "Nueva Zelanda",
+      "equipos": {
+        "local": "Irán",
+        "visitante": "Nueva Zelanda"
+      },
+      "estadio": "Lumen Field",
+      "ciudad": "Seattle",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_G_P3",
+      "fase": "Fase de Grupos - Grupo G",
+      "fecha": "2026-06-21",
+      "hora": "15:00",
+      "casa": "Bélgica",
+      "fuera": "Irán",
+      "equipos": {
+        "local": "Bélgica",
+        "visitante": "Irán"
+      },
+      "estadio": "Mercedes-Benz Stadium",
+      "ciudad": "Atlanta",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_G_P4",
+      "fase": "Fase de Grupos - Grupo G",
+      "fecha": "2026-06-21",
+      "hora": "21:00",
+      "casa": "Nueva Zelanda",
+      "fuera": "Egipto",
+      "equipos": {
+        "local": "Nueva Zelanda",
+        "visitante": "Egipto"
+      },
+      "estadio": "Lumen Field",
+      "ciudad": "Seattle",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_G_P5",
+      "fase": "Fase de Grupos - Grupo G",
+      "fecha": "2026-06-26",
+      "hora": "23:00",
+      "casa": "Egipto",
+      "fuera": "Irán",
+      "equipos": {
+        "local": "Egipto",
+        "visitante": "Irán"
+      },
+      "estadio": "Mercedes-Benz Stadium",
+      "ciudad": "Atlanta",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_G_P6",
+      "fase": "Fase de Grupos - Grupo G",
+      "fecha": "2026-06-26",
+      "hora": "23:00",
+      "casa": "Nueva Zelanda",
+      "fuera": "Bélgica",
+      "equipos": {
+        "local": "Nueva Zelanda",
+        "visitante": "Bélgica"
+      },
+      "estadio": "Lumen Field",
+      "ciudad": "Seattle",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_H_P1",
+      "fase": "Fase de Grupos - Grupo H",
+      "fecha": "2026-06-15",
+      "hora": "12:00",
+      "casa": "España",
+      "fuera": "Cabo Verde",
+      "equipos": {
+        "local": "España",
+        "visitante": "Cabo Verde"
+      },
+      "estadio": "Allegiant Stadium",
+      "ciudad": "Las Vegas",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_H_P2",
+      "fase": "Fase de Grupos - Grupo H",
+      "fecha": "2026-06-15",
+      "hora": "18:00",
+      "casa": "Arabia Saudita",
+      "fuera": "Uruguay",
+      "equipos": {
+        "local": "Arabia Saudita",
+        "visitante": "Uruguay"
+      },
+      "estadio": "Levi's Stadium",
+      "ciudad": "San Francisco",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_H_P3",
+      "fase": "Fase de Grupos - Grupo H",
+      "fecha": "2026-06-21",
+      "hora": "12:00",
+      "casa": "España",
+      "fuera": "Arabia Saudita",
+      "equipos": {
+        "local": "España",
+        "visitante": "Arabia Saudita"
+      },
+      "estadio": "Allegiant Stadium",
+      "ciudad": "Las Vegas",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_H_P4",
+      "fase": "Fase de Grupos - Grupo H",
+      "fecha": "2026-06-21",
+      "hora": "18:00",
+      "casa": "Uruguay",
+      "fuera": "Cabo Verde",
+      "equipos": {
+        "local": "Uruguay",
+        "visitante": "Cabo Verde"
+      },
+      "estadio": "Estadio Akron",
+      "ciudad": "Guadalajara",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_H_P5",
+      "fase": "Fase de Grupos - Grupo H",
+      "fecha": "2026-06-26",
+      "hora": "20:00",
+      "casa": "Cabo Verde",
+      "fuera": "Arabia Saudita",
+      "equipos": {
+        "local": "Cabo Verde",
+        "visitante": "Arabia Saudita"
+      },
+      "estadio": "Allegiant Stadium",
+      "ciudad": "Las Vegas",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_H_P6",
+      "fase": "Fase de Grupos - Grupo H",
+      "fecha": "2026-06-26",
+      "hora": "20:00",
+      "casa": "Uruguay",
+      "fuera": "España",
+      "equipos": {
+        "local": "Uruguay",
+        "visitante": "España"
+      },
+      "estadio": "Estadio Akron",
+      "ciudad": "Guadalajara",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_I_P1",
+      "fase": "Fase de Grupos - Grupo I",
+      "fecha": "2026-06-16",
+      "hora": "15:00",
+      "casa": "Francia",
+      "fuera": "Senegal",
+      "equipos": {
+        "local": "Francia",
+        "visitante": "Senegal"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_I_P2",
+      "fase": "Fase de Grupos - Grupo I",
+      "fecha": "2026-06-16",
+      "hora": "18:00",
+      "casa": "Irak",
+      "fuera": "Noruega",
+      "equipos": {
+        "local": "Irak",
+        "visitante": "Noruega"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_I_P3",
+      "fase": "Fase de Grupos - Grupo I",
+      "fecha": "2026-06-22",
+      "hora": "17:00",
+      "casa": "Francia",
+      "fuera": "Irak",
+      "equipos": {
+        "local": "Francia",
+        "visitante": "Irak"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_I_P4",
+      "fase": "Fase de Grupos - Grupo I",
+      "fecha": "2026-06-22",
+      "hora": "20:00",
+      "casa": "Noruega",
+      "fuera": "Senegal",
+      "equipos": {
+        "local": "Noruega",
+        "visitante": "Senegal"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_I_P5",
+      "fase": "Fase de Grupos - Grupo I",
+      "fecha": "2026-06-26",
+      "hora": "15:00",
+      "casa": "Noruega",
+      "fuera": "Francia",
+      "equipos": {
+        "local": "Noruega",
+        "visitante": "Francia"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_I_P6",
+      "fase": "Fase de Grupos - Grupo I",
+      "fecha": "2026-06-26",
+      "hora": "15:00",
+      "casa": "Senegal",
+      "fuera": "Irak",
+      "equipos": {
+        "local": "Senegal",
+        "visitante": "Irak"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_J_P1",
+      "fase": "Fase de Grupos - Grupo J",
+      "fecha": "2026-06-16",
+      "hora": "21:00",
+      "casa": "Argentina",
+      "fuera": "Argelia",
+      "equipos": {
+        "local": "Argentina",
+        "visitante": "Argelia"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_J_P2",
+      "fase": "Fase de Grupos - Grupo J",
+      "fecha": "2026-06-17",
+      "hora": "00:00",
+      "casa": "Austria",
+      "fuera": "Jordania",
+      "equipos": {
+        "local": "Austria",
+        "visitante": "Jordania"
+      },
+      "estadio": "Estadio BBVA",
+      "ciudad": "Monterrey",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_J_P3",
+      "fase": "Fase de Grupos - Grupo J",
+      "fecha": "2026-06-22",
+      "hora": "13:00",
+      "casa": "Argentina",
+      "fuera": "Austria",
+      "equipos": {
+        "local": "Argentina",
+        "visitante": "Austria"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_J_P4",
+      "fase": "Fase de Grupos - Grupo J",
+      "fecha": "2026-06-22",
+      "hora": "23:00",
+      "casa": "Jordania",
+      "fuera": "Argelia",
+      "equipos": {
+        "local": "Jordania",
+        "visitante": "Argelia"
+      },
+      "estadio": "Estadio BBVA",
+      "ciudad": "Monterrey",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_J_P5",
+      "fase": "Fase de Grupos - Grupo J",
+      "fecha": "2026-06-27",
+      "hora": "22:00",
+      "casa": "Argelia",
+      "fuera": "Austria",
+      "equipos": {
+        "local": "Argelia",
+        "visitante": "Austria"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_J_P6",
+      "fase": "Fase de Grupos - Grupo J",
+      "fecha": "2026-06-27",
+      "hora": "22:00",
+      "casa": "Jordania",
+      "fuera": "Argentina",
+      "equipos": {
+        "local": "Jordania",
+        "visitante": "Argentina"
+      },
+      "estadio": "Estadio BBVA",
+      "ciudad": "Monterrey",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_K_P1",
+      "fase": "Fase de Grupos - Grupo K",
+      "fecha": "2026-06-17",
+      "hora": "13:00",
+      "casa": "Portugal",
+      "fuera": "RD Congo",
+      "equipos": {
+        "local": "Portugal",
+        "visitante": "RD Congo"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_K_P2",
+      "fase": "Fase de Grupos - Grupo K",
+      "fecha": "2026-06-17",
+      "hora": "22:00",
+      "casa": "Uzbekistán",
+      "fuera": "Colombia",
+      "equipos": {
+        "local": "Uzbekistán",
+        "visitante": "Colombia"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_K_P3",
+      "fase": "Fase de Grupos - Grupo K",
+      "fecha": "2026-06-23",
+      "hora": "13:00",
+      "casa": "Portugal",
+      "fuera": "Uzbekistán",
+      "equipos": {
+        "local": "Portugal",
+        "visitante": "Uzbekistán"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_K_P4",
+      "fase": "Fase de Grupos - Grupo K",
+      "fecha": "2026-06-23",
+      "hora": "22:00",
+      "casa": "Colombia",
+      "fuera": "RD Congo",
+      "equipos": {
+        "local": "Colombia",
+        "visitante": "RD Congo"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_K_P5",
+      "fase": "Fase de Grupos - Grupo K",
+      "fecha": "2026-06-27",
+      "hora": "19:30",
+      "casa": "Colombia",
+      "fuera": "Portugal",
+      "equipos": {
+        "local": "Colombia",
+        "visitante": "Portugal"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_K_P6",
+      "fase": "Fase de Grupos - Grupo K",
+      "fecha": "2026-06-27",
+      "hora": "19:30",
+      "casa": "RD Congo",
+      "fuera": "Uzbekistán",
+      "equipos": {
+        "local": "RD Congo",
+        "visitante": "Uzbekistán"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_L_P1",
+      "fase": "Fase de Grupos - Grupo L",
+      "fecha": "2026-06-17",
+      "hora": "16:00",
+      "casa": "Inglaterra",
+      "fuera": "Croacia",
+      "equipos": {
+        "local": "Inglaterra",
+        "visitante": "Croacia"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_L_P2",
+      "fase": "Fase de Grupos - Grupo L",
+      "fecha": "2026-06-17",
+      "hora": "19:00",
+      "casa": "Ghana",
+      "fuera": "Panamá",
+      "equipos": {
+        "local": "Ghana",
+        "visitante": "Panamá"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami",
+      "jor": "J1"
+    },
+    {
+      "partido_id": "G_L_P3",
+      "fase": "Fase de Grupos - Grupo L",
+      "fecha": "2026-06-23",
+      "hora": "16:00",
+      "casa": "Inglaterra",
+      "fuera": "Ghana",
+      "equipos": {
+        "local": "Inglaterra",
+        "visitante": "Ghana"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_L_P4",
+      "fase": "Fase de Grupos - Grupo L",
+      "fecha": "2026-06-23",
+      "hora": "19:00",
+      "casa": "Panamá",
+      "fuera": "Croacia",
+      "equipos": {
+        "local": "Panamá",
+        "visitante": "Croacia"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami",
+      "jor": "J2"
+    },
+    {
+      "partido_id": "G_L_P5",
+      "fase": "Fase de Grupos - Grupo L",
+      "fecha": "2026-06-27",
+      "hora": "17:00",
+      "casa": "Panamá",
+      "fuera": "Inglaterra",
+      "equipos": {
+        "local": "Panamá",
+        "visitante": "Inglaterra"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "G_L_P6",
+      "fase": "Fase de Grupos - Grupo L",
+      "fecha": "2026-06-27",
+      "hora": "17:00",
+      "casa": "Croacia",
+      "fuera": "Ghana",
+      "equipos": {
+        "local": "Croacia",
+        "visitante": "Ghana"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami",
+      "jor": "J3"
+    },
+    {
+      "partido_id": "73",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-06-28",
+      "hora": "15:00",
+      "casa": "2° Grupo A",
+      "fuera": "2° Grupo B",
+      "equipos": {
+        "local": "2° Grupo A",
+        "visitante": "2° Grupo B"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles"
+    },
+    {
+      "partido_id": "76",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-06-29",
+      "hora": "13:00",
+      "casa": "1° Grupo C",
+      "fuera": "2° Grupo F",
+      "equipos": {
+        "local": "1° Grupo C",
+        "visitante": "2° Grupo F"
+      },
+      "estadio": "MetLife Stadium",
+      "ciudad": "Nueva York"
+    },
+    {
+      "partido_id": "74",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-06-29",
+      "hora": "16:30",
+      "casa": "1° Grupo E",
+      "fuera": "3° Grupo A/B/C/D/F",
+      "equipos": {
+        "local": "1° Grupo E",
+        "visitante": "3° A/B/C/D/F"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston"
+    },
+    {
+      "partido_id": "75",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-06-29",
+      "hora": "21:00",
+      "casa": "1° Grupo F",
+      "fuera": "2° Grupo C",
+      "equipos": {
+        "local": "1° Grupo F",
+        "visitante": "2° Grupo C"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas"
+    },
+    {
+      "partido_id": "78",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-06-30",
+      "hora": "13:00",
+      "casa": "2° Grupo E",
+      "fuera": "2° Grupo I",
+      "equipos": {
+        "local": "2° Grupo E",
+        "visitante": "2° Grupo I"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia"
+    },
+    {
+      "partido_id": "77",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-06-30",
+      "hora": "17:00",
+      "casa": "1° Grupo I",
+      "fuera": "3° Grupo C/D/F/G/H",
+      "equipos": {
+        "local": "1° Grupo I",
+        "visitante": "3° C/D/F/G/H"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami"
+    },
+    {
+      "partido_id": "79",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-06-30",
+      "hora": "21:00",
+      "casa": "1° Grupo A",
+      "fuera": "3° Grupo C/E/F/H/I",
+      "equipos": {
+        "local": "1° Grupo A",
+        "visitante": "3° C/E/F/H/I"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México"
+    },
+    {
+      "partido_id": "80",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-01",
+      "hora": "12:00",
+      "casa": "1° Grupo L",
+      "fuera": "3° Grupo E/H/I/J/K",
+      "equipos": {
+        "local": "1° Grupo L",
+        "visitante": "3° E/H/I/J/K"
+      },
+      "estadio": "Gillette Stadium",
+      "ciudad": "Boston"
+    },
+    {
+      "partido_id": "82",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-01",
+      "hora": "16:00",
+      "casa": "1° Grupo G",
+      "fuera": "3° Grupo A/E/H/I/J",
+      "equipos": {
+        "local": "1° Grupo G",
+        "visitante": "3° A/E/H/I/J"
+      },
+      "estadio": "Mercedes-Benz Stadium",
+      "ciudad": "Atlanta"
+    },
+    {
+      "partido_id": "81",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-01",
+      "hora": "20:00",
+      "casa": "1° Grupo D",
+      "fuera": "3° Grupo B/E/F/I/J",
+      "equipos": {
+        "local": "1° Grupo D",
+        "visitante": "3° B/E/F/I/J"
+      },
+      "estadio": "BC Place",
+      "ciudad": "Vancouver"
+    },
+    {
+      "partido_id": "84",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-02",
+      "hora": "15:00",
+      "casa": "1° Grupo H",
+      "fuera": "2° Grupo J",
+      "equipos": {
+        "local": "1° Grupo H",
+        "visitante": "2° Grupo J"
+      },
+      "estadio": "Allegiant Stadium",
+      "ciudad": "Las Vegas"
+    },
+    {
+      "partido_id": "83",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-02",
+      "hora": "19:00",
+      "casa": "2° Grupo K",
+      "fuera": "2° Grupo L",
+      "equipos": {
+        "local": "2° Grupo K",
+        "visitante": "2° Grupo L"
+      },
+      "estadio": "Lumen Field",
+      "ciudad": "Seattle"
+    },
+    {
+      "partido_id": "85",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-02",
+      "hora": "23:00",
+      "casa": "1° Grupo B",
+      "fuera": "3° Grupo E/F/G/I/J",
+      "equipos": {
+        "local": "1° Grupo B",
+        "visitante": "3° E/F/G/I/J"
+      },
+      "estadio": "BMO Field",
+      "ciudad": "Toronto"
+    },
+    {
+      "partido_id": "88",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-03",
+      "hora": "14:00",
+      "casa": "2° Grupo D",
+      "fuera": "2° Grupo G",
+      "equipos": {
+        "local": "2° Grupo D",
+        "visitante": "2° Grupo G"
+      },
+      "estadio": "Levi's Stadium",
+      "ciudad": "San Francisco"
+    },
+    {
+      "partido_id": "86",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-03",
+      "hora": "18:00",
+      "casa": "1° Grupo J",
+      "fuera": "2° Grupo H",
+      "equipos": {
+        "local": "1° Grupo J",
+        "visitante": "2° Grupo H"
+      },
+      "estadio": "Estadio Akron",
+      "ciudad": "Guadalajara"
+    },
+    {
+      "partido_id": "87",
+      "fase": "Dieciseisavos de Final",
+      "fecha": "2026-07-03",
+      "hora": "21:30",
+      "casa": "1° Grupo K",
+      "fuera": "3° Grupo D/E/F/I/L",
+      "equipos": {
+        "local": "1° Grupo K",
+        "visitante": "3° D/E/F/I/L"
+      },
+      "estadio": "Estadio BBVA",
+      "ciudad": "Monterrey"
+    },
+    {
+      "partido_id": "90",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-04",
+      "hora": "13:00",
+      "casa": "Ganador 73",
+      "fuera": "Ganador 75",
+      "equipos": {
+        "local": "Ganador 73",
+        "visitante": "Ganador 75"
+      },
+      "estadio": "MetLife Stadium",
+      "ciudad": "Nueva York"
+    },
+    {
+      "partido_id": "89",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-04",
+      "hora": "17:00",
+      "casa": "Ganador 74",
+      "fuera": "Ganador 77",
+      "equipos": {
+        "local": "Ganador 74",
+        "visitante": "Ganador 77"
+      },
+      "estadio": "Lincoln Financial Field",
+      "ciudad": "Filadelfia"
+    },
+    {
+      "partido_id": "91",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-05",
+      "hora": "16:00",
+      "casa": "Ganador 76",
+      "fuera": "Ganador 78",
+      "equipos": {
+        "local": "Ganador 76",
+        "visitante": "Ganador 78"
+      },
+      "estadio": "NRG Stadium",
+      "ciudad": "Houston"
+    },
+    {
+      "partido_id": "92",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-05",
+      "hora": "20:00",
+      "casa": "Ganador 79",
+      "fuera": "Ganador 80",
+      "equipos": {
+        "local": "Ganador 79",
+        "visitante": "Ganador 80"
+      },
+      "estadio": "Estadio Azteca",
+      "ciudad": "Ciudad de México"
+    },
+    {
+      "partido_id": "93",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-06",
+      "hora": "15:00",
+      "casa": "Ganador 83",
+      "fuera": "Ganador 84",
+      "equipos": {
+        "local": "Ganador 83",
+        "visitante": "Ganador 84"
+      },
+      "estadio": "Allegiant Stadium",
+      "ciudad": "Las Vegas"
+    },
+    {
+      "partido_id": "94",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-06",
+      "hora": "20:00",
+      "casa": "Ganador 81",
+      "fuera": "Ganador 82",
+      "equipos": {
+        "local": "Ganador 81",
+        "visitante": "Ganador 82"
+      },
+      "estadio": "BC Place",
+      "ciudad": "Vancouver"
+    },
+    {
+      "partido_id": "95",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-07",
+      "hora": "12:00",
+      "casa": "Ganador 86",
+      "fuera": "Ganador 88",
+      "equipos": {
+        "local": "Ganador 86",
+        "visitante": "Ganador 88"
+      },
+      "estadio": "SoFi Stadium",
+      "ciudad": "Los Ángeles"
+    },
+    {
+      "partido_id": "96",
+      "fase": "Octavos de Final",
+      "fecha": "2026-07-07",
+      "hora": "16:00",
+      "casa": "Ganador 85",
+      "fuera": "Ganador 87",
+      "equipos": {
+        "local": "Ganador 85",
+        "visitante": "Ganador 87"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas"
+    },
+    {
+      "partido_id": "97",
+      "fase": "Cuartos de Final",
+      "fecha": "2026-07-09",
+      "hora": "16:00",
+      "casa": "Ganador 89",
+      "fuera": "Ganador 90",
+      "equipos": {
+        "local": "Ganador 89",
+        "visitante": "Ganador 90"
+      },
+      "estadio": "Gillette Stadium",
+      "ciudad": "Boston"
+    },
+    {
+      "partido_id": "98",
+      "fase": "Cuartos de Final",
+      "fecha": "2026-07-10",
+      "hora": "15:00",
+      "casa": "Ganador 93",
+      "fuera": "Ganador 94",
+      "equipos": {
+        "local": "Ganador 93",
+        "visitante": "Ganador 94"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami"
+    },
+    {
+      "partido_id": "99",
+      "fase": "Cuartos de Final",
+      "fecha": "2026-07-11",
+      "hora": "17:00",
+      "casa": "Ganador 91",
+      "fuera": "Ganador 92",
+      "equipos": {
+        "local": "Ganador 91",
+        "visitante": "Ganador 92"
+      },
+      "estadio": "Mercedes-Benz Stadium",
+      "ciudad": "Atlanta"
+    },
+    {
+      "partido_id": "100",
+      "fase": "Cuartos de Final",
+      "fecha": "2026-07-11",
+      "hora": "21:00",
+      "casa": "Ganador 95",
+      "fuera": "Ganador 96",
+      "equipos": {
+        "local": "Ganador 95",
+        "visitante": "Ganador 96"
+      },
+      "estadio": "Lumen Field",
+      "ciudad": "Seattle"
+    },
+    {
+      "partido_id": "101",
+      "fase": "Semifinal",
+      "fecha": "2026-07-14",
+      "hora": "15:00",
+      "casa": "Ganador 97",
+      "fuera": "Ganador 98",
+      "equipos": {
+        "local": "Ganador 97",
+        "visitante": "Ganador 98"
+      },
+      "estadio": "AT&T Stadium",
+      "ciudad": "Dallas"
+    },
+    {
+      "partido_id": "102",
+      "fase": "Semifinal",
+      "fecha": "2026-07-15",
+      "hora": "15:00",
+      "casa": "Ganador 99",
+      "fuera": "Ganador 100",
+      "equipos": {
+        "local": "Ganador 99",
+        "visitante": "Ganador 100"
+      },
+      "estadio": "Mercedes-Benz Stadium",
+      "ciudad": "Atlanta"
+    },
+    {
+      "partido_id": "103",
+      "fase": "Tercer Lugar",
+      "fecha": "2026-07-18",
+      "hora": "17:00",
+      "casa": "Perdedor 101",
+      "fuera": "Perdedor 102",
+      "equipos": {
+        "local": "Perdedor 101",
+        "visitante": "Perdedor 102"
+      },
+      "estadio": "Hard Rock Stadium",
+      "ciudad": "Miami"
+    },
+    {
+      "partido_id": "104",
+      "fase": "Gran Final",
+      "fecha": "2026-07-19",
+      "hora": "15:00",
+      "casa": "Ganador 101",
+      "fuera": "Ganador 102",
+      "equipos": {
+        "local": "Ganador 101",
+        "visitante": "Ganador 102"
+      },
+      "estadio": "MetLife Stadium",
+      "ciudad": "Nueva York"
+    }
+  ]
+}

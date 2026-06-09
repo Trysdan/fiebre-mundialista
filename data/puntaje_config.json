@@ -1,0 +1,20 @@
+{
+  "grupos": { "exacto": 4, "diferencia": 3, "ganador": 2 },
+  "dieciseisavos": { "exacto": 5, "diferencia": 4, "ganador": 2 },
+  "octavos": { "exacto": 6, "diferencia": 4, "ganador": 3 },
+  "cuartos": { "exacto": 7, "diferencia": 5, "ganador": 3 },
+  "semifinal": { "exacto": 8, "diferencia": 6, "ganador": 4 },
+  "tercer_puesto": { "exacto": 9, "diferencia": 6, "ganador": 4 },
+  "final": { "exacto": 11, "diferencia": 8, "ganador": 5 },
+  "cuadro_de_honor": {
+    "campeon": 15,
+    "subcampeon": 10,
+    "tercer_puesto": 5,
+    "bota_oro": 8,
+    "bota_plata": 5,
+    "bota_bronce": 3,
+    "balon_oro": 8,
+    "balon_plata": 5,
+    "balon_bronce": 3
+  }
+}
