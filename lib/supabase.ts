@@ -61,6 +61,31 @@ export async function insertQuiniela(body: any) {
   });
 }
 
+export async function recordLoginAttempt(ip: string, username?: string) {
+  await fetchSupabase("login_attempts", {
+    method: "POST",
+    body: JSON.stringify({ ip, username: username || null }),
+    headers: { Prefer: "return=minimal" },
+  });
+}
+
+export async function getRecentLoginAttempts(ip: string, windowMinutes = 15) {
+  const since = new Date(Date.now() - windowMinutes * 60 * 1000).toISOString();
+  const res = await fetchSupabase(
+    `login_attempts?ip=eq.${encodeURIComponent(ip)}&attempted_at=gte.${encodeURIComponent(since)}&select=id`,
+    { headers: { Accept: "application/json" } }
+  );
+  const rows = await res.json();
+  return rows as any[];
+}
+
+export async function clearLoginAttempts(ip: string) {
+  await fetchSupabase(`login_attempts?ip=eq.${encodeURIComponent(ip)}`, {
+    method: "DELETE",
+    headers: { Prefer: "return=minimal" },
+  });
+}
+
 export async function deleteQuiniela(participante: string) {
   await fetchSupabase(`quinielas?participante=eq.${encodeURIComponent(participante)}`, {
     method: "DELETE",

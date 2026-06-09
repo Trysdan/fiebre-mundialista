@@ -69,6 +69,9 @@ export default function AdminPanel({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginBlocked, setLoginBlocked] = useState(false);
+  const [blockCountdown, setBlockCountdown] = useState(0);
   const [localResults, setLocalResults] = useState<Record<string, any>>(resultados);
   const [puntajeConfig, setPuntajeConfig] = useState(initialConfig);
   const [teamEdits, setTeamEdits] = useState<Record<string, { casa: string; fuera: string }>>({});
@@ -119,12 +122,36 @@ export default function AdminPanel({
     }
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === creds.usuario && password === creds.password) {
-      setIsLoggedIn(true);
-    } else {
-      alert("Credenciales incorrectas");
+    setLoginError("");
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setLoginBlocked(false);
+        setIsLoggedIn(true);
+      } else if (data.error === "blocked") {
+        setLoginBlocked(true);
+        setLoginError(data.message || "Demasiados intentos. Intenta más tarde.");
+        if (data.retryAfter) {
+          setBlockCountdown(data.retryAfter);
+          const interval = setInterval(() => {
+            setBlockCountdown((prev) => {
+              if (prev <= 1) { clearInterval(interval); setLoginBlocked(false); return 0; }
+              return prev - 1;
+            });
+          }, 1000);
+        }
+      } else {
+        setLoginError(data.message || "Credenciales incorrectas");
+      }
+    } catch {
+      setLoginError("Error de conexión al servidor");
     }
   };
 
@@ -186,28 +213,38 @@ export default function AdminPanel({
           <p className="text-gray-500 text-center mb-8">
             Ingresa tus credenciales para continuar
           </p>
-          <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="text"
-              placeholder="Usuario"
-              className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Contraseña"
-              className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-all shadow-md"
-            >
-              Ingresar
-            </button>
-          </form>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <input
+                type="text"
+                placeholder="Usuario"
+                className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={loginBlocked}
+              />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                className="w-full bg-gray-50 rounded-xl px-4 py-3 border border-gray-200 outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                disabled={loginBlocked}
+              />
+              {loginError && (
+                <div className={`text-sm font-semibold text-center p-3 rounded-xl ${loginBlocked ? "bg-red-50 text-red-600" : "bg-orange-50 text-orange-600"}`}>
+                  {loginBlocked && blockCountdown > 0
+                    ? `⏳ ${Math.floor(blockCountdown / 60)}:${String(blockCountdown % 60).padStart(2, "0")}`
+                    : loginError}
+                </div>
+              )}
+              <button
+                type="submit"
+                disabled={loginBlocked}
+                className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loginBlocked ? "Bloqueado" : "Ingresar"}
+              </button>
+            </form>
         </div>
       </div>
     );

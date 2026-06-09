@@ -47,6 +47,7 @@ async function seed() {
 
   await upsert("admin_creds", { usuario: "admin", password: "admin" });
 
+  console.log("✓ admin_creds");
   console.log("\nSeed completado.");
 }
 
