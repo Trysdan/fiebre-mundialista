@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Lock,
   LogOut,
@@ -11,6 +11,7 @@ import {
   Mail,
   Info,
   Medal,
+  Upload,
 } from "lucide-react";
 
 interface AdminPanelProps {
@@ -74,6 +75,44 @@ export default function AdminPanel({
   const [localContacto, setLocalContacto] = useState<{ email: string; telefonos: string[] }>(
     initialContacto || { email: "", telefonos: [] }
   );
+  const [newPartName, setNewPartName] = useState("");
+  const [newPartCedula, setNewPartCedula] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleSaveParticipante = async () => {
+    if (!selectedFile || !newPartName) return;
+    setUploading(true);
+    try {
+      const text = await selectedFile.text();
+      const jsonData = JSON.parse(text);
+      const res = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "quiniela",
+          participante: newPartName,
+          cedula: newPartCedula,
+          archivo_fuente: selectedFile.name,
+          ...jsonData,
+        }),
+      });
+      if (res.ok) {
+        alert("Participante guardado");
+        setNewPartName("");
+        setNewPartCedula("");
+        setSelectedFile(null);
+      } else {
+        const err = await res.json();
+        alert("Error: " + (err.error || "No se pudo guardar"));
+      }
+    } catch (err) {
+      alert("Error al leer el archivo JSON");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -381,16 +420,38 @@ export default function AdminPanel({
               Añadir Participante
             </h3>
             <div className="grid sm:grid-cols-2 gap-4 mb-4">
-              <input type="text" placeholder="Nombre Completo" className="bg-gray-50 p-3 rounded-xl border border-gray-200 outline-none" />
-              <input type="text" placeholder="Cédula" className="bg-gray-50 p-3 rounded-xl border border-gray-200 outline-none" />
+              <input type="text" placeholder="Nombre Completo" className="bg-gray-50 p-3 rounded-xl border border-gray-200 outline-none"
+                value={newPartName}
+                onChange={(e) => setNewPartName(e.target.value)}
+              />
+              <input type="text" placeholder="Cédula" className="bg-gray-50 p-3 rounded-xl border border-gray-200 outline-none"
+                value={newPartCedula}
+                onChange={(e) => setNewPartCedula(e.target.value)}
+              />
             </div>
-            <div className="bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300 text-center cursor-pointer hover:bg-gray-100 transition-colors">
-              <Info className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p className="text-sm text-gray-500 font-medium">Click para cargar JSON de Quiniela</p>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".json"
+              className="hidden"
+              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+            />
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-gray-50 p-4 rounded-xl border border-dashed border-gray-300 text-center cursor-pointer hover:bg-gray-100 transition-colors"
+            >
+              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <p className="text-sm text-gray-500 font-medium">
+                {selectedFile ? selectedFile.name : "Click para cargar JSON de Quiniela"}
+              </p>
             </div>
-            <button className="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-md">
+            <button
+              onClick={handleSaveParticipante}
+              disabled={uploading || !newPartName || !selectedFile}
+              className="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <Save className="w-5 h-5" />
-              Guardar Participante
+              {uploading ? "Guardando..." : "Guardar Participante"}
             </button>
           </div>
         </div>

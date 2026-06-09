@@ -79,7 +79,7 @@ export default function App() {
       setSelectedQuiniela(userQuinielas[0] || null);
       setActivePanel("PARTICIPANTE");
     } else {
-      alert("Participante no encontrado. Prueba con: JesusPrueba");
+      alert("Participante no encontrado. Busca por nombre completo.");
     }
   };
 
@@ -286,7 +286,7 @@ export default function App() {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
                         <input
                           type="text"
-                          placeholder="Ej: JesusPrueba"
+                          placeholder="Buscar por nombre del participante..."
                           className="w-full bg-white text-gray-900 rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-blue-400 outline-none"
                           value={searchCedula}
                           onChange={(e) => setSearchCedula(e.target.value)}
