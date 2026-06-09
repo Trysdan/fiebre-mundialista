@@ -40,6 +40,11 @@ async function seed() {
 
   await upsert("resultados", {});
 
+  await upsert("contacto", {
+    email: "fiebremundialista206@gmail.com",
+    telefonos: ["04247318608", "04247149966", "04220705392"],
+  });
+
   console.log("\nSeed completado.");
 }
 

@@ -42,6 +42,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Cuadro de honor actualizado" });
     }
 
+    if (type === "contacto") {
+      await upsertRow("contacto", body.contacto);
+      return NextResponse.json({ success: true, message: "Contacto actualizado" });
+    }
+
     return NextResponse.json({ error: "Tipo de operación no válido" }, { status: 400 });
   } catch (error) {
     console.error("Error en admin:", error);

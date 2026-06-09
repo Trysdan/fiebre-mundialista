@@ -37,12 +37,10 @@ export default function App() {
   const [partidos, setPartidos] = useState<any[]>([]);
   const [resultados, setResultados] = useState<Record<string, any>>({});
   const [quinielas, setQuinielas] = useState<any[]>([]);
-  const [puntajeConfig, setPuntajeConfig] = useState<
-    Record<string, { exacto: number; diferencia: number; ganador: number }>
-  >({});
-  const [contactInfo] = useState({
-    whatsapp: "+58 412-1234567",
-    email: "soporte@fiebremundialista.com",
+  const [puntajeConfig, setPuntajeConfig] = useState<any>({});
+  const [contacto, setContacto] = useState<{ email: string; telefonos: string[] }>({
+    email: "",
+    telefonos: [],
   });
 
   const SIMULATED_TODAY = "2026-06-11";
@@ -55,6 +53,7 @@ export default function App() {
       setResultados(json.resultados || {});
       setQuinielas(json.quinielas || []);
       if (json.puntajeConfig) setPuntajeConfig(json.puntajeConfig);
+      if (json.contacto) setContacto(json.contacto);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -126,6 +125,21 @@ export default function App() {
       }
     } catch (err) {
       console.error("Error saving partidos:", err);
+    }
+  };
+
+  const handleSaveContacto = async (data: { email: string; telefonos: string[] }) => {
+    try {
+      const res = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "contacto", contacto: data }),
+      });
+      if (res.ok) {
+        setContacto(data);
+      }
+    } catch (err) {
+      console.error("Error saving contacto:", err);
     }
   };
 
@@ -219,7 +233,7 @@ export default function App() {
                 Contacto
               </p>
               <p className="text-xs font-bold text-blue-900">
-                {contactInfo.whatsapp}
+                {contacto.telefonos?.[0] || ""}
               </p>
             </div>
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
@@ -383,10 +397,12 @@ export default function App() {
                 partidos={partidos}
                 resultados={resultados}
                 puntajeConfig={puntajeConfig}
+                contacto={contacto}
                 onSaveResultados={handleSaveResultados}
                 onSavePuntajeConfig={handleSavePuntajeConfig}
                 onSavePartidos={handleSavePartidos}
                 onSaveCuadroHonor={handleSaveCuadroHonor}
+                onSaveContacto={handleSaveContacto}
               />
             )}
           </motion.div>
@@ -436,13 +452,13 @@ export default function App() {
           </div>
           <div className="flex gap-4">
             <a
-              href={`mailto:${contactInfo.email}`}
+              href={`mailto:${contacto.email}`}
               className="text-gray-400 hover:text-blue-600 transition-colors"
             >
               <Mail className="w-5 h-5" />
             </a>
             <a
-              href={`https://wa.me/${contactInfo.whatsapp.replace(/\D/g, "")}`}
+              href={`https://wa.me/${(contacto.telefonos?.[0] || "").replace(/\D/g, "")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 hover:text-green-500 transition-colors"

@@ -17,10 +17,12 @@ interface AdminPanelProps {
   partidos: any[];
   resultados: Record<string, any>;
   puntajeConfig: Record<string, any>;
+  contacto?: { email: string; telefonos: string[] };
   onSaveResultados: (resultados: Record<string, any>) => Promise<void>;
   onSavePuntajeConfig: (config: any) => Promise<void>;
   onSavePartidos?: (partidos: Record<string, { casa: string; fuera: string }>) => Promise<void>;
   onSaveCuadroHonor?: (cuadro: Record<string, string>) => Promise<void>;
+  onSaveContacto?: (data: { email: string; telefonos: string[] }) => Promise<void>;
 }
 
 function parseMatchTeams(match: any) {
@@ -47,10 +49,12 @@ export default function AdminPanel({
   partidos,
   resultados,
   puntajeConfig: initialConfig,
+  contacto: initialContacto,
   onSaveResultados,
   onSavePuntajeConfig,
   onSavePartidos,
   onSaveCuadroHonor,
+  onSaveContacto,
 }: AdminPanelProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -60,6 +64,9 @@ export default function AdminPanel({
   const [teamEdits, setTeamEdits] = useState<Record<string, { casa: string; fuera: string }>>({});
   const [cuadroHonor, setCuadroHonor] = useState<Record<string, string>>(
     resultados.cuadro_de_honor || {}
+  );
+  const [localContacto, setLocalContacto] = useState<{ email: string; telefonos: string[] }>(
+    initialContacto || { email: "", telefonos: [] }
   );
 
   const handleLogin = (e: React.FormEvent) => {
@@ -91,6 +98,12 @@ export default function AdminPanel({
     if (!onSaveCuadroHonor) return;
     await onSaveCuadroHonor(cuadroHonor);
     alert("Cuadro de Honor actualizado");
+  };
+
+  const handleSaveContacto = async () => {
+    if (!onSaveContacto) return;
+    await onSaveContacto(localContacto);
+    alert("Contacto actualizado");
   };
 
   const updateConfig = (phase: string, field: string, value: number) => {
@@ -432,25 +445,41 @@ export default function AdminPanel({
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="text-lg font-bold mb-4">Contacto</h3>
             <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center text-green-600">
-                  <MessageCircle className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[10px] text-gray-400 font-bold uppercase">WhatsApp</p>
-                  <p className="text-sm font-semibold">+58 412-1234567</p>
-                </div>
+              <div>
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Email</label>
+                <input type="email" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500"
+                  value={localContacto.email}
+                  onChange={(e) => setLocalContacto((prev) => ({ ...prev, email: e.target.value }))}
+                />
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600">
-                  <Mail className="w-5 h-5" />
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Teléfonos (WhatsApp)</label>
+                  <button onClick={() => setLocalContacto((prev) => ({ ...prev, telefonos: [...prev.telefonos, ""] }))}
+                    className="text-xs text-blue-600 font-bold hover:underline">+ Agregar</button>
                 </div>
-                <div>
-                  <p className="text-[10px] text-gray-400 font-bold uppercase">Email</p>
-                  <p className="text-sm font-semibold">soporte@fiebremundialista.com</p>
+                <div className="space-y-2">
+                  {localContacto.telefonos.map((tel, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <input type="text" className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500"
+                        value={tel}
+                        onChange={(e) => {
+                          const newTels = [...localContacto.telefonos];
+                          newTels[i] = e.target.value;
+                          setLocalContacto((prev) => ({ ...prev, telefonos: newTels }));
+                        }}
+                      />
+                      <button onClick={() => setLocalContacto((prev) => ({ ...prev, telefonos: prev.telefonos.filter((_, j) => j !== i) }))}
+                        className="text-red-500 text-sm font-bold hover:underline">X</button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
+            <button onClick={handleSaveContacto} className="mt-4 w-full bg-green-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md hover:bg-green-700 transition-colors text-sm">
+              <Save className="w-4 h-4" />
+              Guardar Contacto
+            </button>
           </div>
         </div>
       </div>

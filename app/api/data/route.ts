@@ -14,6 +14,7 @@ export async function GET() {
       partidos: map.partidos || { partidos: [] },
       resultados: map.resultados || {},
       puntajeConfig: map.puntaje_config || {},
+      contacto: map.contacto || { email: "", telefonos: [] },
       quinielas,
     });
   } catch (error) {
