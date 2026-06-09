@@ -12,6 +12,7 @@ import {
   Info,
   Medal,
   Upload,
+  Trash2,
 } from "lucide-react";
 
 interface AdminPanelProps {
@@ -20,12 +21,14 @@ interface AdminPanelProps {
   puntajeConfig: Record<string, any>;
   contacto?: { email: string; telefonos: string[] };
   adminCreds?: { usuario: string; password: string };
+  quinielas?: any[];
   onSaveResultados: (resultados: Record<string, any>) => Promise<void>;
   onSavePuntajeConfig: (config: any) => Promise<void>;
   onSavePartidos?: (partidos: Record<string, { casa: string; fuera: string }>) => Promise<void>;
   onSaveCuadroHonor?: (cuadro: Record<string, string>) => Promise<void>;
   onSaveContacto?: (data: { email: string; telefonos: string[] }) => Promise<void>;
   onSaveAdminCreds?: (creds: { usuario: string; password: string }) => Promise<void>;
+  onDeleteQuiniela?: (participante: string) => Promise<void>;
 }
 
 function parseMatchTeams(match: any) {
@@ -54,12 +57,14 @@ export default function AdminPanel({
   puntajeConfig: initialConfig,
   contacto: initialContacto,
   adminCreds: initialCreds,
+  quinielas,
   onSaveResultados,
   onSavePuntajeConfig,
   onSavePartidos,
   onSaveCuadroHonor,
   onSaveContacto,
   onSaveAdminCreds,
+  onDeleteQuiniela,
 }: AdminPanelProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -469,6 +474,35 @@ export default function AdminPanel({
               <Save className="w-5 h-5" />
               {uploading ? "Guardando..." : "Guardar Participante"}
             </button>
+          </div>
+
+          {/* Participantes Registrados */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 className="text-xl font-bold flex items-center gap-2 mb-6">
+              <CheckCircle2 className="text-green-600" />
+              Participantes Registrados
+            </h3>
+            {(!quinielas || quinielas.length === 0) ? (
+              <p className="text-sm text-gray-400 text-center py-6">No hay participantes registrados</p>
+            ) : (
+              <div className="space-y-2">
+                {[...new Set((quinielas || []).map((q: any) => q.participante))].sort().map((name: string) => (
+                  <div key={name as string} className="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
+                    <span className="font-semibold text-sm text-gray-700">{name as string}</span>
+                    <button
+                      onClick={async () => {
+                        if (window.confirm(`¿Eliminar a "${name}"?`)) {
+                          await onDeleteQuiniela?.(name as string);
+                        }
+                      }}
+                      className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-lg transition-colors"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 

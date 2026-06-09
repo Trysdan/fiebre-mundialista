@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { upsertRow, getRow, insertQuiniela } from "@/lib/supabase";
+import { upsertRow, getRow, insertQuiniela, deleteQuiniela } from "@/lib/supabase";
 
 export async function POST(request: Request) {
   try {
@@ -50,6 +50,11 @@ export async function POST(request: Request) {
     if (type === "admin_creds") {
       await upsertRow("admin_creds", body.admin_creds);
       return NextResponse.json({ success: true, message: "Credenciales actualizadas" });
+    }
+
+    if (type === "delete_quiniela") {
+      await deleteQuiniela(body.participante);
+      return NextResponse.json({ success: true, message: "Participante eliminado" });
     }
 
     return NextResponse.json({ error: "Tipo de operación no válido" }, { status: 400 });

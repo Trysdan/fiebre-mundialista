@@ -60,3 +60,10 @@ export async function insertQuiniela(body: any) {
     headers: { Prefer: "return=minimal" },
   });
 }
+
+export async function deleteQuiniela(participante: string) {
+  await fetchSupabase(`quinielas?participante=eq.${encodeURIComponent(participante)}`, {
+    method: "DELETE",
+    headers: { Prefer: "return=minimal" },
+  });
+}

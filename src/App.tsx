@@ -130,6 +130,24 @@ export default function App() {
     }
   };
 
+  const handleDeleteQuiniela = async (participante: string) => {
+    try {
+      const res = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "delete_quiniela", participante }),
+      });
+      if (res.ok) {
+        await fetchData();
+        alert(`"${participante}" eliminado`);
+      } else {
+        alert("Error al eliminar participante");
+      }
+    } catch (err) {
+      console.error("Error deleting quiniela:", err);
+    }
+  };
+
   const handleSaveAdminCreds = async (creds: { usuario: string; password: string }) => {
     try {
       const res = await fetch("/api/admin", {
@@ -414,12 +432,14 @@ export default function App() {
                 puntajeConfig={puntajeConfig}
                 contacto={contacto}
                 adminCreds={adminCreds}
+                quinielas={quinielas}
                 onSaveResultados={handleSaveResultados}
                 onSavePuntajeConfig={handleSavePuntajeConfig}
                 onSavePartidos={handleSavePartidos}
                 onSaveCuadroHonor={handleSaveCuadroHonor}
                 onSaveContacto={handleSaveContacto}
                 onSaveAdminCreds={handleSaveAdminCreds}
+                onDeleteQuiniela={handleDeleteQuiniela}
               />
             )}
           </motion.div>
