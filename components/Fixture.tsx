@@ -43,6 +43,13 @@ function getResultStatus(pronostico: any, resultado: any) {
   if (gc === rc && gf === rf) return "correct";
   const gPron = gc > gf ? "1" : gc < gf ? "2" : "X";
   const gReal = rc > rf ? "1" : rc < rf ? "2" : "X";
+  if (gPron === "X" && gReal === "X") {
+    const predWinner = pronostico.marca_ganador_casa || pronostico.marca_ganador_fuera || "";
+    const realWinner = resultado.ganador_penales || "";
+    if (predWinner && realWinner) {
+      return predWinner.toLowerCase() === realWinner.toLowerCase() ? "correct" : "incorrect";
+    }
+  }
   if (gPron === gReal) return "partial";
   return "incorrect";
 }
@@ -83,6 +90,12 @@ function getPointsForMatch(match: any, quiniela: any, resultados: Record<string,
 function MatchCard({ match, prediction, real, status, quiniela, points }: any) {
   const quinielaTeams = getQuinielaTeams(match, quiniela);
   const equipos = quinielaTeams || parseEquipos(match);
+  const isKnockout = !match.fase?.startsWith("Fase de Grupos");
+  const predWinner = isKnockout && prediction?.marca_ganador_casa
+    ? equipos.local
+    : isKnockout && prediction?.marca_ganador_fuera
+    ? equipos.visitante
+    : null;
   return (
     <div
       className={`bg-white rounded-2xl border-2 transition-all p-5 shadow-sm ${
@@ -107,8 +120,13 @@ function MatchCard({ match, prediction, real, status, quiniela, points }: any) {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="font-semibold text-gray-800 text-sm truncate pr-2">
+          <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
             {equipos.local}
+            {predWinner === equipos.local && (
+              <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
+                GANADOR
+              </span>
+            )}
           </span>
           <div className="flex gap-1">
             <span className="bg-gray-50 text-gray-700 w-8 h-8 rounded-lg flex items-center justify-center font-bold border border-gray-100">
@@ -123,8 +141,13 @@ function MatchCard({ match, prediction, real, status, quiniela, points }: any) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="font-semibold text-gray-800 text-sm truncate pr-2">
+          <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
             {equipos.visitante}
+            {predWinner === equipos.visitante && (
+              <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
+                GANADOR
+              </span>
+            )}
           </span>
           <div className="flex gap-1">
             <span className="bg-gray-50 text-gray-700 w-8 h-8 rounded-lg flex items-center justify-center font-bold border border-gray-100">

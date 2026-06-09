@@ -290,27 +290,43 @@ export default function AdminPanel({
                       <div key={fase}>
                         <h4 className="text-xs font-bold text-blue-500 uppercase tracking-wider mb-3">{fase}</h4>
                         <div className="space-y-2">
-                          {matches.map((match: any) => (
-                            <div key={match.partido_id} className="flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl">
-                              <span className="text-[10px] font-bold text-gray-400 w-14">{match.partido_id}</span>
-                              <span className="text-xs text-gray-500 w-10">{match.hora}</span>
-                              <span className="text-xs font-semibold truncate max-w-[90px] text-right flex-1">
-                                {parseMatchTeams(match).local}
+                          {matches.map((match: any) => {
+                            const teams = parseMatchTeams(match);
+                            return (
+                            <div key={match.partido_id} className="flex items-center gap-1.5 bg-gray-50 p-2.5 rounded-xl flex-wrap">
+                              <span className="text-[10px] font-bold text-gray-400 w-10">{match.partido_id}</span>
+                              <span className="text-xs text-gray-500 w-8">{match.hora}</span>
+                              <span className="text-xs font-semibold truncate max-w-[80px] text-right">
+                                {teams.local}
                               </span>
                               <div className="flex items-center gap-1">
-                                <input type="number" className="w-10 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                                <input type="number" className="w-9 h-7 text-center bg-white border border-gray-200 rounded-lg text-xs font-bold"
                                   value={localResults[match.partido_id]?.goles_local ?? ""}
                                   onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_local: isNaN(val) ? 0 : val, goles_visitante: prev[match.partido_id]?.goles_visitante ?? 0 } })); }} />
                                 <span className="text-gray-400 text-xs">-</span>
-                                <input type="number" className="w-10 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                                <input type="number" className="w-9 h-7 text-center bg-white border border-gray-200 rounded-lg text-xs font-bold"
                                   value={localResults[match.partido_id]?.goles_visitante ?? ""}
                                   onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_visitante: isNaN(val) ? 0 : val, goles_local: prev[match.partido_id]?.goles_local ?? 0 } })); }} />
                               </div>
-                              <span className="text-xs font-semibold truncate max-w-[90px] flex-1">
-                                {parseMatchTeams(match).visitante}
+                              <span className="text-xs font-semibold truncate max-w-[75px]">
+                                {teams.visitante}
                               </span>
+                              <div className="flex items-center gap-1 text-[10px] font-bold">
+                                <label className={`px-1.5 py-0.5 rounded cursor-pointer ${localResults[match.partido_id]?.ganador_penales === teams.local ? "bg-blue-600 text-white" : "bg-white border border-gray-300 text-gray-500"}`}>
+                                  <input type="radio" name={`ganador_${match.partido_id}`} value={teams.local} className="hidden"
+                                    checked={localResults[match.partido_id]?.ganador_penales === teams.local}
+                                    onChange={() => setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_local: prev[match.partido_id]?.goles_local ?? 0, goles_visitante: prev[match.partido_id]?.goles_visitante ?? 0, ganador_penales: teams.local } }))}
+                                  /> {teams.local}
+                                </label>
+                                <label className={`px-1.5 py-0.5 rounded cursor-pointer ${localResults[match.partido_id]?.ganador_penales === teams.visitante ? "bg-blue-600 text-white" : "bg-white border border-gray-300 text-gray-500"}`}>
+                                  <input type="radio" name={`ganador_${match.partido_id}`} value={teams.visitante} className="hidden"
+                                    checked={localResults[match.partido_id]?.ganador_penales === teams.visitante}
+                                    onChange={() => setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_local: prev[match.partido_id]?.goles_local ?? 0, goles_visitante: prev[match.partido_id]?.goles_visitante ?? 0, ganador_penales: teams.visitante } }))}
+                                  /> {teams.visitante}
+                                </label>
+                              </div>
                             </div>
-                          ))}
+                          )})}
                         </div>
                       </div>
                     );
