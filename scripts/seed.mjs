@@ -45,6 +45,8 @@ async function seed() {
     telefonos: ["04247318608", "04247149966", "04220705392"],
   });
 
+  await upsert("admin_creds", { usuario: "admin", password: "admin" });
+
   console.log("\nSeed completado.");
 }
 

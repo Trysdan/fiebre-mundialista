@@ -18,11 +18,13 @@ interface AdminPanelProps {
   resultados: Record<string, any>;
   puntajeConfig: Record<string, any>;
   contacto?: { email: string; telefonos: string[] };
+  adminCreds?: { usuario: string; password: string };
   onSaveResultados: (resultados: Record<string, any>) => Promise<void>;
   onSavePuntajeConfig: (config: any) => Promise<void>;
   onSavePartidos?: (partidos: Record<string, { casa: string; fuera: string }>) => Promise<void>;
   onSaveCuadroHonor?: (cuadro: Record<string, string>) => Promise<void>;
   onSaveContacto?: (data: { email: string; telefonos: string[] }) => Promise<void>;
+  onSaveAdminCreds?: (creds: { usuario: string; password: string }) => Promise<void>;
 }
 
 function parseMatchTeams(match: any) {
@@ -50,11 +52,13 @@ export default function AdminPanel({
   resultados,
   puntajeConfig: initialConfig,
   contacto: initialContacto,
+  adminCreds: initialCreds,
   onSaveResultados,
   onSavePuntajeConfig,
   onSavePartidos,
   onSaveCuadroHonor,
   onSaveContacto,
+  onSaveAdminCreds,
 }: AdminPanelProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -62,6 +66,8 @@ export default function AdminPanel({
   const [localResults, setLocalResults] = useState<Record<string, any>>(resultados);
   const [puntajeConfig, setPuntajeConfig] = useState(initialConfig);
   const [teamEdits, setTeamEdits] = useState<Record<string, { casa: string; fuera: string }>>({});
+  const [creds, setCreds] = useState(initialCreds || { usuario: "admin", password: "admin" });
+  const [localCreds, setLocalCreds] = useState(initialCreds || { usuario: "admin", password: "admin" });
   const [cuadroHonor, setCuadroHonor] = useState<Record<string, string>>(
     resultados.cuadro_de_honor || {}
   );
@@ -71,7 +77,7 @@ export default function AdminPanel({
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === "admin" && password === "admin") {
+    if (username === creds.usuario && password === creds.password) {
       setIsLoggedIn(true);
     } else {
       alert("Credenciales incorrectas");
@@ -98,6 +104,13 @@ export default function AdminPanel({
     if (!onSaveCuadroHonor) return;
     await onSaveCuadroHonor(cuadroHonor);
     alert("Cuadro de Honor actualizado");
+  };
+
+  const handleSaveCreds = async () => {
+    if (!onSaveAdminCreds) return;
+    await onSaveAdminCreds(localCreds);
+    setCreds(localCreds);
+    alert("Credenciales actualizadas");
   };
 
   const handleSaveContacto = async () => {
@@ -438,6 +451,31 @@ export default function AdminPanel({
             <button onClick={handleSaveConfig} className="mt-4 w-full bg-green-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md hover:bg-green-700 transition-colors text-sm">
               <Save className="w-4 h-4" />
               Guardar Configuración
+            </button>
+          </div>
+
+          {/* Credenciales */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 className="text-lg font-bold mb-4">Credenciales Admin</h3>
+            <div className="space-y-3">
+              <div>
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Usuario</label>
+                <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500"
+                  value={localCreds.usuario}
+                  onChange={(e) => setLocalCreds((prev) => ({ ...prev, usuario: e.target.value }))}
+                />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block mb-1">Contraseña</label>
+                <input type="text" className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm font-semibold outline-none focus:ring-2 focus:ring-blue-500"
+                  value={localCreds.password}
+                  onChange={(e) => setLocalCreds((prev) => ({ ...prev, password: e.target.value }))}
+                />
+              </div>
+            </div>
+            <button onClick={handleSaveCreds} className="mt-4 w-full bg-red-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md hover:bg-red-700 transition-colors text-sm">
+              <Save className="w-4 h-4" />
+              Guardar Credenciales
             </button>
           </div>
 

@@ -47,6 +47,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Contacto actualizado" });
     }
 
+    if (type === "admin_creds") {
+      await upsertRow("admin_creds", body.admin_creds);
+      return NextResponse.json({ success: true, message: "Credenciales actualizadas" });
+    }
+
     return NextResponse.json({ error: "Tipo de operación no válido" }, { status: 400 });
   } catch (error) {
     console.error("Error en admin:", error);

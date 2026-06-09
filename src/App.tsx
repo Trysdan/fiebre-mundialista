@@ -42,6 +42,7 @@ export default function App() {
     email: "",
     telefonos: [],
   });
+  const [adminCreds, setAdminCreds] = useState({ usuario: "admin", password: "admin" });
 
   const SIMULATED_TODAY = "2026-06-11";
 
@@ -54,6 +55,7 @@ export default function App() {
       setQuinielas(json.quinielas || []);
       if (json.puntajeConfig) setPuntajeConfig(json.puntajeConfig);
       if (json.contacto) setContacto(json.contacto);
+      if (json.adminCreds) setAdminCreds(json.adminCreds);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -125,6 +127,19 @@ export default function App() {
       }
     } catch (err) {
       console.error("Error saving partidos:", err);
+    }
+  };
+
+  const handleSaveAdminCreds = async (creds: { usuario: string; password: string }) => {
+    try {
+      const res = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "admin_creds", admin_creds: creds }),
+      });
+      if (res.ok) setAdminCreds(creds);
+    } catch (err) {
+      console.error("Error saving admin creds:", err);
     }
   };
 
@@ -398,11 +413,13 @@ export default function App() {
                 resultados={resultados}
                 puntajeConfig={puntajeConfig}
                 contacto={contacto}
+                adminCreds={adminCreds}
                 onSaveResultados={handleSaveResultados}
                 onSavePuntajeConfig={handleSavePuntajeConfig}
                 onSavePartidos={handleSavePartidos}
                 onSaveCuadroHonor={handleSaveCuadroHonor}
                 onSaveContacto={handleSaveContacto}
+                onSaveAdminCreds={handleSaveAdminCreds}
               />
             )}
           </motion.div>
