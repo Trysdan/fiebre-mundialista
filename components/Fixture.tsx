@@ -229,7 +229,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
         <h3 className="text-lg font-bold text-blue-900 border-l-4 border-blue-600 pl-4 mb-4">
           Cuadro de Honor
         </h3>
-        <div className="grid grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
             <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Campeón</span>
             <p className="text-lg font-black text-amber-900 mt-1">{fmt(ch.campeon)}</p>

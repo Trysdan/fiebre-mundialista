@@ -295,7 +295,7 @@ export default function AdminPanel({
                       </h4>
                       <div className="space-y-2">
                         {matches.map((match: any) => (
-                          <div key={match.partido_id} className="flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl">
+                          <div key={match.partido_id} className="flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl flex-wrap">
                             <span className="text-[10px] font-bold text-gray-400 w-14 leading-tight">
                               {match.jor
                                 ? `Grupo ${match.fase?.replace("Fase de Grupos - Grupo ", "")} · ${match.jor.replace("J", "J")}`

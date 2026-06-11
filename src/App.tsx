@@ -284,24 +284,24 @@ export default function App() {
           >
             {activePanel === "INICIO" && (
               <div className="space-y-10">
-                <div className="bg-blue-600 text-white rounded-3xl p-8 shadow-xl relative overflow-hidden">
+                <div className="bg-blue-600 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
                   <div className="relative z-10">
-                    <h2 className="text-3xl font-bold mb-4">
+                    <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">
                       ¡Vive el Mundial 2026!
                     </h2>
-                    <p className="text-blue-100 mb-8 max-w-md">
-                      Ingresa tu cédula para ver tus quinielas y el fixture
+                    <p className="text-blue-100 mb-6 sm:mb-8 max-w-md text-sm sm:text-base">
+                      Ingresa tu nombre para ver tus quinielas y el fixture
                       completo.
                     </p>
                     <form
                       onSubmit={handleSearch}
-                      className="flex gap-2 max-w-sm"
+                      className="flex flex-col sm:flex-row gap-2 max-w-sm"
                     >
                       <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
                         <input
                           type="text"
-                          placeholder="Buscar por nombre del participante..."
+                          placeholder="Buscar por nombre..."
                           className="w-full bg-white text-gray-900 rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-blue-400 outline-none"
                           value={searchCedula}
                           onChange={(e) => setSearchCedula(e.target.value)}
@@ -309,7 +309,7 @@ export default function App() {
                       </div>
                       <button
                         type="submit"
-                        className="bg-white text-blue-600 font-semibold px-6 rounded-xl hover:bg-blue-50 transition-colors"
+                        className="bg-white text-blue-600 font-semibold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors"
                       >
                         Buscar
                       </button>
@@ -335,31 +335,31 @@ export default function App() {
                           key={match.partido_id}
                           className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between"
                         >
-                          <div className="text-center w-1/3">
-                            <p className="font-bold text-gray-900 h-12 flex items-center justify-center">
+                          <div className="text-center w-1/3 min-w-0">
+                            <p className="font-bold text-gray-900 h-12 flex items-center justify-center text-xs sm:text-sm truncate px-1">
                               {equipos.local}
                             </p>
                           </div>
-                          <div className="text-center">
+                          <div className="text-center shrink-0">
                             {real ? (
-                              <div className="flex items-center justify-center gap-2">
-                                <span className="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold shadow-sm text-sm">
+                              <div className="flex items-center justify-center gap-1 sm:gap-2">
+                                <span className="bg-blue-600 text-white w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center font-bold shadow-sm text-xs sm:text-sm">
                                   {real.goles_local ?? real.goles_casa}
                                 </span>
-                                <span className="text-gray-400 font-bold text-xs">-</span>
-                                <span className="bg-blue-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold shadow-sm text-sm">
+                                <span className="text-gray-400 font-bold text-[10px] sm:text-xs">-</span>
+                                <span className="bg-blue-600 text-white w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center font-bold shadow-sm text-xs sm:text-sm">
                                   {real.goles_visitante ?? real.goles_fuera}
                                 </span>
                               </div>
                             ) : (
-                              <p className="text-2xl font-black text-blue-600">VS</p>
+                              <p className="text-xl sm:text-2xl font-black text-blue-600">VS</p>
                             )}
-                            <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">
+                            <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest mt-1">
                               {match.hora}
                             </p>
                           </div>
-                          <div className="text-center w-1/3">
-                            <p className="font-bold text-gray-900 h-12 flex items-center justify-center">
+                          <div className="text-center w-1/3 min-w-0">
+                            <p className="font-bold text-gray-900 h-12 flex items-center justify-center text-xs sm:text-sm truncate px-1">
                               {equipos.visitante}
                             </p>
                           </div>
@@ -406,7 +406,7 @@ export default function App() {
                     ← Ver todos los participantes
                   </button>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {userQuinielas.map((q, i) => (
                     <button
                       key={i}
