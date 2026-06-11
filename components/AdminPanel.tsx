@@ -324,7 +324,7 @@ export default function AdminPanel({
                           {new Date(fecha + "T12:00:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" })}
                         </h4>
                       </button>
-                      {isOpen && <div className="space-y-2">
+                      {isOpen && (<div className="space-y-2">
                         {matches.map((match: any) => (
                           <div key={match.partido_id} className="flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl flex-wrap">
                             <span className="text-[10px] font-bold text-gray-400 w-14 leading-tight">
@@ -360,7 +360,7 @@ export default function AdminPanel({
                             </div>
                           ))}
                         </div>
-                      </div>}
+                      </div>)}
                   )})}
                   {KO_PHASES.map((fase) => {
                     const matches = (partidos || []).filter((m: any) => m.fase === fase)
@@ -375,7 +375,7 @@ export default function AdminPanel({
                           <ChevronDown className={`w-3.5 h-3.5 text-blue-400 transition-transform ${isOpen ? "" : "-rotate-90"}`} />
                           <h4 className="text-xs font-bold text-blue-500 uppercase tracking-wider">{fase}</h4>
                         </button>
-                        {isOpen && <div className="space-y-2">
+                        {isOpen && (<div className="space-y-2">
                           {matches.map((match: any) => {
                             const teams = parseMatchTeams(match);
                             return (
@@ -422,10 +422,10 @@ export default function AdminPanel({
                             )}
                             </div>
                           )})}
-                        </div>}
-                      </div>
-                    );
-                  })}
+                          </div>)}
+                       </div>
+                     );
+                   })}
                 </div>
               );
             })()}
