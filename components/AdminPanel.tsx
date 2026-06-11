@@ -13,6 +13,7 @@ import {
   Medal,
   Upload,
   Trash2,
+  XCircle,
 } from "lucide-react";
 
 interface AdminPanelProps {
@@ -319,6 +320,13 @@ export default function AdminPanel({
                             <span className="text-xs font-semibold truncate max-w-[90px] flex-1">
                               {parseMatchTeams(match).visitante}
                             </span>
+                            {localResults[match.partido_id] && (
+                              <button onClick={() => setLocalResults((prev) => { const c = { ...prev }; delete c[match.partido_id]; return c; })}
+                                className="text-red-400 hover:text-red-600 hover:bg-red-50 p-1 rounded-lg transition-colors"
+                                title="Limpiar resultado">
+                                <XCircle className="w-4 h-4" />
+                              </button>
+                            )}
                           </div>
                         ))}
                       </div>
@@ -367,6 +375,13 @@ export default function AdminPanel({
                                   /> {teams.visitante}
                                 </label>
                               </div>
+                            {localResults[match.partido_id] && (
+                              <button onClick={() => setLocalResults((prev) => { const c = { ...prev }; delete c[match.partido_id]; return c; })}
+                                className="text-red-400 hover:text-red-600 hover:bg-red-50 p-1 rounded-lg transition-colors"
+                                title="Limpiar resultado">
+                                <XCircle className="w-4 h-4" />
+                              </button>
+                            )}
                             </div>
                           )})}
                         </div>
