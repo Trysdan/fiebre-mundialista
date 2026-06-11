@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { convertXlsxToQuinielaJson } from "../lib/xlsxParser";
 import {
   Lock,
   LogOut,
@@ -16,7 +17,6 @@ import {
   XCircle,
   ChevronDown,
 } from "lucide-react";
-
 interface AdminPanelProps {
   partidos: any[];
   resultados: Record<string, any>;
@@ -117,8 +117,14 @@ export default function AdminPanel({
     if (!selectedFile || !newPartName) return;
     setUploading(true);
     try {
-      const text = await selectedFile.text();
-      const jsonData = JSON.parse(text);
+      let jsonData: any;
+      if (selectedFile.name.endsWith(".xlsx")) {
+        const buf = await selectedFile.arrayBuffer();
+        jsonData = convertXlsxToQuinielaJson(new Uint8Array(buf));
+      } else {
+        const text = await selectedFile.text();
+        jsonData = JSON.parse(text);
+      }
       const res = await fetch("/api/admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -140,7 +146,7 @@ export default function AdminPanel({
         alert("Error: " + (err.error || "No se pudo guardar"));
       }
     } catch (err) {
-      alert("Error al leer el archivo JSON");
+      alert("Error al leer el archivo " + selectedFile.name.endsWith(".xlsx") ? "XLSX" : "JSON");
     } finally {
       setUploading(false);
     }
@@ -543,7 +549,7 @@ export default function AdminPanel({
             <input
               ref={fileInputRef}
               type="file"
-              accept=".json"
+              accept=".json,.xlsx"
               className="hidden"
               onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
             />
@@ -553,7 +559,7 @@ export default function AdminPanel({
             >
               <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <p className="text-sm text-gray-500 font-medium">
-                {selectedFile ? selectedFile.name : "Click para cargar JSON de Quiniela"}
+                {selectedFile ? selectedFile.name : "Click para cargar JSON o XLSX de Quiniela"}
               </p>
             </div>
             <button
