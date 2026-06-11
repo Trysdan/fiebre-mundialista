@@ -236,10 +236,7 @@ export default function App() {
               Inicio
             </button>
             <button
-              onClick={() => {
-                if (selectedUser) setActivePanel("PARTICIPANTE");
-                else alert("Por favor busca tu quiniela primero");
-              }}
+              onClick={() => setActivePanel("PARTICIPANTE")}
               className={`font-bold transition-all ${
                 activePanel === "PARTICIPANTE"
                   ? "text-blue-600"
@@ -389,31 +386,41 @@ export default function App() {
 
             {activePanel === "PARTICIPANTE" && (
               <div className="space-y-8">
+                {selectedUser ? (
+                  <>
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900">
-                      Bienvenido, {selectedUser}
-                    </h2>
-                    <p className="text-gray-500">
-                      Tus quinielas para el Mundial 2026
-                    </p>
+                  <div className="flex items-center gap-4">
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        Bienvenido, {selectedUser}
+                      </h2>
+                      <p className="text-gray-500">
+                        Tus quinielas para el Mundial 2026
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex gap-2">
-                    {userQuinielas.map((q, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setSelectedQuiniela(q)}
-                        className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                          selectedQuiniela?.participante === q.participante &&
-                          selectedQuiniela?.archivo_fuente === q.archivo_fuente
-                            ? "bg-blue-600 text-white shadow-md"
-                            : "bg-white text-gray-600 border border-gray-200 hover:border-blue-400"
-                        }`}
-                      >
-                        {q.archivo_fuente || `Quiniela ${i + 1}`}
-                      </button>
-                    ))}
-                  </div>
+                  <button
+                    onClick={() => setSelectedUser(null)}
+                    className="text-sm text-blue-600 font-semibold hover:bg-blue-50 px-4 py-2 rounded-xl transition-colors"
+                  >
+                    ← Ver todos los participantes
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  {userQuinielas.map((q, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedQuiniela(q)}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        selectedQuiniela?.participante === q.participante &&
+                        selectedQuiniela?.archivo_fuente === q.archivo_fuente
+                          ? "bg-blue-600 text-white shadow-md"
+                          : "bg-white text-gray-600 border border-gray-200 hover:border-blue-400"
+                      }`}
+                    >
+                      {q.archivo_fuente || `Quiniela ${i + 1}`}
+                    </button>
+                  ))}
                 </div>
 
                 <Fixture
@@ -422,6 +429,34 @@ export default function App() {
                   resultados={resultados}
                   puntajeConfig={puntajeConfig}
                 />
+                </>
+              ) : (
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    Participantes
+                  </h2>
+                  <p className="text-gray-500 mb-6">
+                    Selecciona un participante para ver su quiniela
+                  </p>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {[...new Set(quinielas.map((q) => q.participante))]
+                      .sort((a, b) => a.localeCompare(b, "es"))
+                      .map((name) => (
+                        <button
+                          key={name}
+                          onClick={() => {
+                            setSelectedUser(name);
+                            const userQ = quinielas.filter((q) => q.participante === name);
+                            setSelectedQuiniela(userQ[0] || null);
+                          }}
+                          className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-left hover:border-blue-400 hover:shadow-md transition-all"
+                        >
+                          <span className="font-semibold text-gray-800">{name}</span>
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              )}
               </div>
             )}
 
@@ -457,10 +492,7 @@ export default function App() {
           <span className="text-[10px] font-bold">Inicio</span>
         </button>
         <button
-          onClick={() => {
-            if (selectedUser) setActivePanel("PARTICIPANTE");
-            else alert("Busca tu quiniela primero");
-          }}
+          onClick={() => setActivePanel("PARTICIPANTE")}
           className={`flex flex-col items-center gap-1 ${
             activePanel === "PARTICIPANTE" ? "text-blue-600" : "text-gray-400"
           }`}
