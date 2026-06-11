@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Lock,
   LogOut,
@@ -92,6 +92,26 @@ export default function AdminPanel({
   const [resultadosOpen, setResultadosOpen] = useState(true);
   const [resultadosSections, setResultadosSections] = useState<Record<string, boolean>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const handleKeyEnter = (e: React.KeyboardEvent, fn: () => void) => {
+    if (e.key === "Enter") { e.preventDefault(); fn(); }
+  };
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && e.target instanceof HTMLElement) {
+        const input = e.target.closest("input, textarea, select");
+        if (!input) return;
+        const card = input.closest(".rounded-2xl");
+        if (!card) return;
+        const btns = card.querySelectorAll("button");
+        for (const btn of btns) {
+          if (btn.textContent?.includes("Guardar")) { btn.click(); break; }
+        }
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
 
   const handleSaveParticipante = async () => {
     if (!selectedFile || !newPartName) return;
@@ -316,15 +336,30 @@ export default function AdminPanel({
                             <span className="text-xs font-semibold truncate max-w-[90px] text-right flex-1">
                               {parseMatchTeams(match).local}
                             </span>
-                            <div className="flex items-center gap-1">
-                              <input type="number" className="w-10 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
-                                value={localResults[match.partido_id]?.goles_local ?? ""}
-                                onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_local: isNaN(val) ? 0 : val, goles_visitante: prev[match.partido_id]?.goles_visitante ?? 0 } })); }} />
-                              <span className="text-gray-400 text-xs">-</span>
-                              <input type="number" className="w-10 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
-                                value={localResults[match.partido_id]?.goles_visitante ?? ""}
-                                onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_visitante: isNaN(val) ? 0 : val, goles_local: prev[match.partido_id]?.goles_local ?? 0 } })); }} />
+                              <div className="flex items-center gap-1">
+                                <input type="number" className="w-10 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                                  value={localResults[match.partido_id]?.goles_local ?? ""}
+                                  onKeyDown={(e) => handleKeyEnter(e, handleSaveResults)}
+                                  onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_local: isNaN(val) ? 0 : val, goles_visitante: prev[match.partido_id]?.goles_visitante ?? 0 } })); }} />
+                                <span className="text-gray-400 text-xs">-</span>
+                                <input type="number" className="w-10 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                                  value={localResults[match.partido_id]?.goles_visitante ?? ""}
+                                  onKeyDown={(e) => handleKeyEnter(e, handleSaveResults)}
+                                  onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_visitante: isNaN(val) ? 0 : val, goles_local: prev[match.partido_id]?.goles_local ?? 0 } })); }} />
+                              </div>
+                              <span className="text-xs font-semibold truncate max-w-[90px] flex-1">
+                                {parseMatchTeams(match).visitante}
+                              </span>
+                              {localResults[match.partido_id] && (
+                                <button onClick={() => setLocalResults((prev) => { const c = { ...prev }; delete c[match.partido_id]; return c; })}
+                                  className="text-red-400 hover:text-red-600 hover:bg-red-50 p-1 rounded-lg transition-colors"
+                                  title="Limpiar resultado">
+                                  <XCircle className="w-4 h-4" />
+                                </button>
+                              )}
                             </div>
+                          ))}
+                        </div>
                             <span className="text-xs font-semibold truncate max-w-[90px] flex-1">
                               {parseMatchTeams(match).visitante}
                             </span>
@@ -366,10 +401,12 @@ export default function AdminPanel({
                               <div className="flex items-center gap-1">
                                 <input type="number" className="w-9 h-7 text-center bg-white border border-gray-200 rounded-lg text-xs font-bold"
                                   value={localResults[match.partido_id]?.goles_local ?? ""}
+                                  onKeyDown={(e) => handleKeyEnter(e, handleSaveResults)}
                                   onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_local: isNaN(val) ? 0 : val, goles_visitante: prev[match.partido_id]?.goles_visitante ?? 0 } })); }} />
                                 <span className="text-gray-400 text-xs">-</span>
                                 <input type="number" className="w-9 h-7 text-center bg-white border border-gray-200 rounded-lg text-xs font-bold"
                                   value={localResults[match.partido_id]?.goles_visitante ?? ""}
+                                  onKeyDown={(e) => handleKeyEnter(e, handleSaveResults)}
                                   onChange={(e) => { const val = parseInt(e.target.value); setLocalResults((prev) => ({ ...prev, [match.partido_id]: { ...prev[match.partido_id], goles_visitante: isNaN(val) ? 0 : val, goles_local: prev[match.partido_id]?.goles_local ?? 0 } })); }} />
                               </div>
                               <span className="text-xs font-semibold truncate max-w-[75px]">
