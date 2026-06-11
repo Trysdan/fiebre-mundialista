@@ -305,10 +305,27 @@ export default function AdminPanel({
         </button>
       </div>
 
+      <div className="flex gap-2 flex-wrap mb-6 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
+        {[
+          { id: "sec-resultados", label: "Resultados" },
+          { id: "sec-cuadro-honor", label: "Cuadro de Honor" },
+          { id: "sec-equipos", label: "Equipos Finales" },
+          { id: "sec-participante", label: "Añadir Participante" },
+          { id: "sec-registrados", label: "Registrados" },
+          { id: "sec-puntaje", label: "Puntaje" },
+        ].map(({ id, label }) => (
+          <button key={id} onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            className="text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg transition-colors"
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           {/* Cargar Resultados Reales */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div id="sec-resultados" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <button onClick={() => setResultadosOpen(!resultadosOpen)} className="flex items-center justify-between w-full mb-6">
               <h3 className="text-xl font-bold flex items-center gap-2">
                 <CheckCircle2 className="text-blue-600" />
@@ -455,7 +472,7 @@ export default function AdminPanel({
           </div>
 
           {/* Cuadro de Honor */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div id="sec-cuadro-honor" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="text-xl font-bold flex items-center gap-2 mb-6">
               <Medal className="text-amber-500" />
               Cuadro de Honor (Respuestas Correctas)
@@ -493,7 +510,7 @@ export default function AdminPanel({
           </div>
 
           {/* Equipos Fases Finales */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div id="sec-equipos" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="text-xl font-bold flex items-center gap-2 mb-6">
               <Info className="text-blue-600" />
               Equipos - Fases Finales
@@ -544,7 +561,7 @@ export default function AdminPanel({
             </button>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div id="sec-participante" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="text-xl font-bold flex items-center gap-2 mb-6">
               <Plus className="text-blue-600" />
               Añadir Participante
@@ -596,7 +613,7 @@ export default function AdminPanel({
           </div>
 
           {/* Participantes Registrados */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div id="sec-registrados" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="text-xl font-bold flex items-center gap-2 mb-6">
               <CheckCircle2 className="text-green-600" />
               Participantes Registrados
@@ -627,7 +644,7 @@ export default function AdminPanel({
 
         <div className="space-y-8">
           {/* Configuración de Puntos */}
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div id="sec-puntaje" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="text-lg font-bold mb-4">Puntaje por Fase</h3>
             <div className="space-y-1 mb-4 text-xs text-gray-400 font-semibold uppercase tracking-wider grid grid-cols-4 gap-2 px-1">
               <span className="col-span-1">Fase</span>
