@@ -44,7 +44,7 @@ export default function App() {
   });
   const [adminCreds, setAdminCreds] = useState({ usuario: "admin", password: "admin" });
 
-  const SIMULATED_TODAY = "2026-06-11";
+  const SIMULATED_TODAY = new Date().toLocaleDateString("en-CA", { timeZone: "America/Caracas" });
 
   const fetchData = useCallback(async () => {
     try {
