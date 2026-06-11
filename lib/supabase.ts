@@ -42,11 +42,11 @@ export async function getAllRows() {
 }
 
 export async function getQuinielas() {
-  const res = await fetchSupabase("quinielas?select=data", {
+  const res = await fetchSupabase("quinielas?select=id,data", {
     headers: { Accept: "application/json" },
   });
   const rows = await res.json();
-  return rows.map((r: any) => r.data);
+  return rows.map((r: any) => ({ id: r.id, ...r.data }));
 }
 
 export async function insertQuiniela(body: any) {

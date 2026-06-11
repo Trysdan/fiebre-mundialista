@@ -412,8 +412,7 @@ export default function App() {
                       key={i}
                       onClick={() => setSelectedQuiniela(q)}
                       className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                        selectedQuiniela?.participante === q.participante &&
-                        selectedQuiniela?.archivo_fuente === q.archivo_fuente
+                        selectedQuiniela?.id === q.id
                           ? "bg-blue-600 text-white shadow-md"
                           : "bg-white text-gray-600 border border-gray-200 hover:border-blue-400"
                       }`}
