@@ -379,6 +379,12 @@ export default function App() {
                     resultados={resultados}
                     puntajeConfig={puntajeConfig}
                     partidos={partidos}
+                    onSelectQuiniela={(nombre) => {
+                      setActivePanel("PARTICIPANTE");
+                      setSelectedUser(nombre);
+                      const userQ = quinielas.filter((q) => q.participante === nombre);
+                      setSelectedQuiniela(userQ[0] || null);
+                    }}
                   />
                 </div>
               </div>
@@ -474,6 +480,7 @@ export default function App() {
                 onSaveContacto={handleSaveContacto}
                 onSaveAdminCreds={handleSaveAdminCreds}
                 onDeleteQuiniela={handleDeleteQuiniela}
+                onRefresh={fetchData}
               />
             )}
           </motion.div>

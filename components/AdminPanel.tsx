@@ -31,6 +31,7 @@ interface AdminPanelProps {
   onSaveContacto?: (data: { email: string; telefonos: string[] }) => Promise<void>;
   onSaveAdminCreds?: (creds: { usuario: string; password: string }) => Promise<void>;
   onDeleteQuiniela?: (participante: string) => Promise<void>;
+  onRefresh?: () => Promise<void>;
 }
 
 function parseMatchTeams(match: any) {
@@ -67,6 +68,7 @@ export default function AdminPanel({
   onSaveContacto,
   onSaveAdminCreds,
   onDeleteQuiniela,
+  onRefresh,
 }: AdminPanelProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -154,6 +156,7 @@ export default function AdminPanel({
         setNewPartCedula("");
         setSelectedFile(null);
         setGoogleSheetUrl("");
+        await onRefresh?.();
       } else {
         const err = await res.json();
         alert("Error: " + (err.error || "No se pudo guardar"));

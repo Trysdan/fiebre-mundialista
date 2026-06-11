@@ -8,9 +8,10 @@ interface LeaderboardProps {
   resultados: Record<string, any>;
   puntajeConfig?: Record<string, { exacto: number; diferencia: number; ganador: number }>;
   partidos?: any[];
+  onSelectQuiniela?: (nombre: string) => void;
 }
 
-export default function Leaderboard({ quinielas, resultados, puntajeConfig, partidos }: LeaderboardProps) {
+export default function Leaderboard({ quinielas, resultados, puntajeConfig, partidos, onSelectQuiniela }: LeaderboardProps) {
   const entries = quinielas
     .map((q) => {
       const { total, detalle } = calcularPuntos(q, resultados, puntajeConfig, partidos);
@@ -44,7 +45,7 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
           </thead>
           <tbody className="divide-y divide-gray-100">
             {entries.map((entry, index) => (
-              <tr key={index} className="hover:bg-gray-50 transition-colors">
+              <tr key={index} onClick={() => onSelectQuiniela?.(entry.nombre)} className="hover:bg-gray-50 transition-colors cursor-pointer">
                 <td className="px-4 py-4 font-bold text-gray-400">{index + 1}</td>
                 <td className="px-4 py-4 font-semibold text-gray-800">{entry.nombre}</td>
                 <td className="px-4 py-4 text-right">
