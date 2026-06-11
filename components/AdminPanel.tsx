@@ -359,10 +359,10 @@ export default function AdminPanel({
                               )}
                             </div>
                           ))}
-                        </div>
-                      </div>)}
+                        </div>)}
+                      </div>
                   )})}
-                  {KO_PHASES.map((fase) => {
+                   {KO_PHASES.map((fase) => {
                     const matches = (partidos || []).filter((m: any) => m.fase === fase)
                       .sort((a: any, b: any) => a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora));
                     if (matches.length === 0) return null;
