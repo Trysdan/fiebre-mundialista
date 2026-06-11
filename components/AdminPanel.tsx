@@ -339,7 +339,7 @@ export default function AdminPanel({
                         ))}
                       </div>}
                     </div>
-                  )})
+                  )})}
                   {KO_PHASES.map((fase) => {
                     const matches = (partidos || []).filter((m: any) => m.fase === fase)
                       .sort((a: any, b: any) => a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora));
