@@ -194,10 +194,7 @@ export default function AdminPanel({
   const updateConfig = (phase: string, field: string, value: number) => {
     setPuntajeConfig((prev) => {
       const current = prev[phase];
-      if (typeof current === "object" && !Array.isArray(current)) {
-        return { ...prev, [phase]: { ...current, [field]: value } };
-      }
-      return { ...prev, [phase]: value };
+      return { ...prev, [phase]: { ...(typeof current === "object" && !Array.isArray(current) ? current : {}), [field]: value } };
     });
   };
 
