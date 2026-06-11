@@ -90,6 +90,7 @@ export default function AdminPanel({
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [resultadosOpen, setResultadosOpen] = useState(true);
+  const [resultadosSections, setResultadosSections] = useState<Record<string, boolean>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveParticipante = async () => {
@@ -291,12 +292,19 @@ export default function AdminPanel({
               ];
               return (
                 <div className="space-y-6">
-                  {Object.entries(fechas).map(([fecha, matches]) => (
+                  {Object.entries(fechas).map(([fecha, matches]) => {
+                    const secKey = "fecha_" + fecha;
+                    const isOpen = resultadosSections[secKey] !== false;
+                    return (
                     <div key={fecha}>
-                      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">
-                        {new Date(fecha + "T12:00:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" })}
-                      </h4>
-                      <div className="space-y-2">
+                      <button onClick={() => setResultadosSections((prev) => ({ ...prev, [secKey]: !isOpen }))}
+                        className="flex items-center gap-2 w-full mb-3">
+                        <ChevronDown className={`w-3.5 h-3.5 text-gray-400 transition-transform ${isOpen ? "" : "-rotate-90"}`} />
+                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">
+                          {new Date(fecha + "T12:00:00").toLocaleDateString("es-ES", { weekday: "short", day: "numeric", month: "short" })}
+                        </h4>
+                      </button>
+                      {isOpen && <div className="space-y-2">
                         {matches.map((match: any) => (
                           <div key={match.partido_id} className="flex items-center gap-2 bg-gray-50 p-2.5 rounded-xl flex-wrap">
                             <span className="text-[10px] font-bold text-gray-400 w-14 leading-tight">
@@ -329,17 +337,23 @@ export default function AdminPanel({
                             )}
                           </div>
                         ))}
-                      </div>
+                      </div>}
                     </div>
-                  ))}
+                  )})
                   {KO_PHASES.map((fase) => {
                     const matches = (partidos || []).filter((m: any) => m.fase === fase)
                       .sort((a: any, b: any) => a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora));
                     if (matches.length === 0) return null;
+                    const secKey = "ko_" + fase;
+                    const isOpen = resultadosSections[secKey] !== false;
                     return (
                       <div key={fase}>
-                        <h4 className="text-xs font-bold text-blue-500 uppercase tracking-wider mb-3">{fase}</h4>
-                        <div className="space-y-2">
+                        <button onClick={() => setResultadosSections((prev) => ({ ...prev, [secKey]: !isOpen }))}
+                          className="flex items-center gap-2 w-full mb-3">
+                          <ChevronDown className={`w-3.5 h-3.5 text-blue-400 transition-transform ${isOpen ? "" : "-rotate-90"}`} />
+                          <h4 className="text-xs font-bold text-blue-500 uppercase tracking-wider">{fase}</h4>
+                        </button>
+                        {isOpen && <div className="space-y-2">
                           {matches.map((match: any) => {
                             const teams = parseMatchTeams(match);
                             return (
@@ -384,7 +398,7 @@ export default function AdminPanel({
                             )}
                             </div>
                           )})}
-                        </div>
+                        </div>}
                       </div>
                     );
                   })}
