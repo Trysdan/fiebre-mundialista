@@ -87,8 +87,6 @@ export default function AdminPanel({
   const [localContacto, setLocalContacto] = useState<{ email: string; telefonos: string[] }>(
     initialContacto || { email: "", telefonos: [] }
   );
-  const [newPartName, setNewPartName] = useState("");
-  const [newPartCedula, setNewPartCedula] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [googleSheetUrl, setGoogleSheetUrl] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -117,7 +115,6 @@ export default function AdminPanel({
   }, []);
 
   const handleSaveParticipante = async () => {
-    if (!newPartName) return;
     if (!selectedFile && !googleSheetUrl) return;
     setUploading(true);
     try {
@@ -139,21 +136,19 @@ export default function AdminPanel({
         const text = await selectedFile!.text();
         jsonData = JSON.parse(text);
       }
+      const participante = jsonData.participante || selectedFile?.name.replace(/\.(json|xlsx)$/i, "") || "Sin_Nombre";
       const res = await fetch("/api/admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "quiniela",
-          participante: newPartName,
-          cedula: newPartCedula,
+          participante,
           archivo_fuente: googleSheetUrl || selectedFile!.name,
           ...jsonData,
         }),
       });
       if (res.ok) {
-        alert("Participante guardado");
-        setNewPartName("");
-        setNewPartCedula("");
+        alert(`Participante "${participante}" guardado`);
         setSelectedFile(null);
         setGoogleSheetUrl("");
         await onRefresh?.();
@@ -569,16 +564,7 @@ export default function AdminPanel({
               <Plus className="text-blue-600" />
               Añadir Participante
             </h3>
-            <div className="grid sm:grid-cols-2 gap-4 mb-4">
-              <input type="text" placeholder="Nombre Completo" className="bg-gray-50 p-3 rounded-xl border border-gray-200 outline-none"
-                value={newPartName}
-                onChange={(e) => setNewPartName(e.target.value)}
-              />
-              <input type="text" placeholder="Cédula" className="bg-gray-50 p-3 rounded-xl border border-gray-200 outline-none"
-                value={newPartCedula}
-                onChange={(e) => setNewPartCedula(e.target.value)}
-              />
-            </div>
+            <p className="text-xs text-gray-400 mb-4">Sube el archivo JSON o XLSX de la quiniela. El nombre se extrae automáticamente del archivo.</p>
             <input
               ref={fileInputRef}
               type="file"
@@ -607,7 +593,7 @@ export default function AdminPanel({
             />
             <button
               onClick={handleSaveParticipante}
-              disabled={uploading || !newPartName || (!selectedFile && !googleSheetUrl)}
+              disabled={uploading || (!selectedFile && !googleSheetUrl)}
               className="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="w-5 h-5" />
