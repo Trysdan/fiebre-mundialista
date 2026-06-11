@@ -14,6 +14,7 @@ import {
   Upload,
   Trash2,
   XCircle,
+  ChevronDown,
 } from "lucide-react";
 
 interface AdminPanelProps {
@@ -88,6 +89,7 @@ export default function AdminPanel({
   const [newPartCedula, setNewPartCedula] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [resultadosOpen, setResultadosOpen] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveParticipante = async () => {
@@ -267,13 +269,14 @@ export default function AdminPanel({
         <div className="lg:col-span-2 space-y-8">
           {/* Cargar Resultados Reales */}
           <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <div className="flex items-center justify-between mb-6">
+            <button onClick={() => setResultadosOpen(!resultadosOpen)} className="flex items-center justify-between w-full mb-6">
               <h3 className="text-xl font-bold flex items-center gap-2">
                 <CheckCircle2 className="text-blue-600" />
                 Cargar Resultados Reales
               </h3>
-            </div>
-            {(() => {
+              <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${resultadosOpen ? "" : "-rotate-90"}`} />
+            </button>
+            {resultadosOpen && (() => {
               const groupMatches = (partidos || [])
                 .filter((m: any) => m.fase?.startsWith("Fase de Grupos"))
                 .sort((a: any, b: any) => a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora));
