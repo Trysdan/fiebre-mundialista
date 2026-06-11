@@ -88,6 +88,7 @@ export default function AdminPanel({
   const [newPartName, setNewPartName] = useState("");
   const [newPartCedula, setNewPartCedula] = useState("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [googleSheetUrl, setGoogleSheetUrl] = useState("");
   const [uploading, setUploading] = useState(false);
   const [resultadosOpen, setResultadosOpen] = useState(true);
   const [resultadosSections, setResultadosSections] = useState<Record<string, boolean>>({});
@@ -114,15 +115,26 @@ export default function AdminPanel({
   }, []);
 
   const handleSaveParticipante = async () => {
-    if (!selectedFile || !newPartName) return;
+    if (!newPartName) return;
+    if (!selectedFile && !googleSheetUrl) return;
     setUploading(true);
     try {
       let jsonData: any;
-      if (selectedFile.name.endsWith(".xlsx")) {
-        const buf = await selectedFile.arrayBuffer();
+      if (googleSheetUrl) {
+        const match = googleSheetUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (!match) throw new Error("URL de Google Sheets inválida");
+        const sheetId = match[1];
+        const resp = await fetch(
+          `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=xlsx`
+        );
+        if (!resp.ok) throw new Error("No se pudo descargar el archivo del link");
+        const buf = await resp.arrayBuffer();
+        jsonData = convertXlsxToQuinielaJson(new Uint8Array(buf));
+      } else if (selectedFile!.name.endsWith(".xlsx")) {
+        const buf = await selectedFile!.arrayBuffer();
         jsonData = convertXlsxToQuinielaJson(new Uint8Array(buf));
       } else {
-        const text = await selectedFile.text();
+        const text = await selectedFile!.text();
         jsonData = JSON.parse(text);
       }
       const res = await fetch("/api/admin", {
@@ -132,7 +144,7 @@ export default function AdminPanel({
           type: "quiniela",
           participante: newPartName,
           cedula: newPartCedula,
-          archivo_fuente: selectedFile.name,
+          archivo_fuente: googleSheetUrl || selectedFile!.name,
           ...jsonData,
         }),
       });
@@ -141,12 +153,13 @@ export default function AdminPanel({
         setNewPartName("");
         setNewPartCedula("");
         setSelectedFile(null);
+        setGoogleSheetUrl("");
       } else {
         const err = await res.json();
         alert("Error: " + (err.error || "No se pudo guardar"));
       }
     } catch (err) {
-      alert("Error al leer el archivo " + selectedFile.name.endsWith(".xlsx") ? "XLSX" : "JSON");
+      alert("Error: " + (err instanceof Error ? err.message : "No se pudo procesar"));
     } finally {
       setUploading(false);
     }
@@ -551,7 +564,7 @@ export default function AdminPanel({
               type="file"
               accept=".json,.xlsx"
               className="hidden"
-              onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+              onChange={(e) => { setSelectedFile(e.target.files?.[0] || null); setGoogleSheetUrl(""); }}
             />
             <div
               onClick={() => fileInputRef.current?.click()}
@@ -562,9 +575,19 @@ export default function AdminPanel({
                 {selectedFile ? selectedFile.name : "Click para cargar JSON o XLSX de Quiniela"}
               </p>
             </div>
+            <div className="flex items-center gap-3 my-4">
+              <div className="flex-1 h-px bg-gray-200" />
+              <span className="text-xs font-semibold text-gray-400 uppercase tracking-widest">o</span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
+            <input type="text" placeholder="O pega el link de Google Sheets"
+              value={googleSheetUrl}
+              onChange={(e) => { setGoogleSheetUrl(e.target.value); setSelectedFile(null); }}
+              className="w-full bg-gray-50 p-3 rounded-xl border border-gray-200 outline-none text-sm"
+            />
             <button
               onClick={handleSaveParticipante}
-              disabled={uploading || !newPartName || !selectedFile}
+              disabled={uploading || !newPartName || (!selectedFile && !googleSheetUrl)}
               className="mt-6 w-full bg-blue-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Save className="w-5 h-5" />
