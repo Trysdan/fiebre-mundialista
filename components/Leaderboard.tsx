@@ -14,15 +14,10 @@ interface LeaderboardProps {
 export default function Leaderboard({ quinielas, resultados, puntajeConfig, partidos, onSelectQuiniela }: LeaderboardProps) {
   const entries = quinielas
     .map((q) => {
-      const { total, detalle } = calcularPuntos(q, resultados, puntajeConfig, partidos);
-      const exactos = detalle.filter((d) => {
-        const phase = d.fase === "grupos" ? "grupos" : "eliminatoria";
-        return d.pts >= 4;
-      }).length;
+      const { total } = calcularPuntos(q, resultados, puntajeConfig, partidos);
       return {
         nombre: q.participante || "Desconocido",
         puntos: total,
-        aciertos_exactos: exactos,
       };
     })
     .sort((a, b) => b.puntos - a.puntos);
@@ -40,7 +35,6 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
               <th className="px-4 py-3">Pos</th>
               <th className="px-4 py-3">Nombre</th>
               <th className="px-4 py-3 text-right">Pts</th>
-              <th className="px-4 py-3 text-right hidden sm:table-cell">Exactos</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -53,14 +47,11 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
                     {entry.puntos}
                   </span>
                 </td>
-                <td className="px-4 py-4 text-right hidden sm:table-cell">
-                  <span className="text-sm text-gray-500">{entry.aciertos_exactos}</span>
-                </td>
               </tr>
             ))}
             {entries.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-gray-400 italic">
+                <td colSpan={3} className="px-4 py-8 text-center text-gray-400 italic">
                   No hay quinielas cargadas
                 </td>
               </tr>
