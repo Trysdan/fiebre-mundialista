@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, MapPin } from "lucide-react";
-import { evaluarPartidoGrupo, evaluarPartidoEliminatoria, getPuntajePorFase } from "@/utils/calcularPuntos";
+import { evaluarPartidoGrupo, evaluarPartidoEliminatoria } from "@/utils/calcularPuntos";
 
 interface FixtureProps {
   partidos: any[];
@@ -75,7 +75,7 @@ function getPointsForMatch(match: any, quiniela: any, resultados: Record<string,
   if (isGroup) {
     return evaluarPartidoGrupo(pred, real, config.grupos);
   }
-  const faseConfig = getPuntajePorFase(match.partido_id, config);
+  const faseConfig = config.grupos || config;
   const quinielaPartido = (() => {
     for (const [, partidos] of Object.entries(quiniela.fase_final || {})) {
       for (const p of (partidos as any[]) || []) {

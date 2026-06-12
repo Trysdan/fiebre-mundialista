@@ -44,16 +44,6 @@ function parseMatchTeams(match: any) {
   return { local: "Local", visitante: "Visitante" };
 }
 
-const PHASES = [
-  { key: "grupos", label: "Fase Grupos" },
-  { key: "dieciseisavos", label: "16vos de Final" },
-  { key: "octavos", label: "8vos de Final" },
-  { key: "cuartos", label: "4tos de Final" },
-  { key: "semifinal", label: "Semifinal" },
-  { key: "tercer_puesto", label: "Tercer Puesto" },
-  { key: "final", label: "Gran Final" },
-];
-
 export default function AdminPanel({
   partidos,
   resultados,
@@ -634,32 +624,52 @@ export default function AdminPanel({
         <div className="space-y-8">
           {/* Configuración de Puntos */}
           <div id="sec-puntaje" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            <h3 className="text-lg font-bold mb-4">Puntaje por Fase</h3>
+            <h3 className="text-lg font-bold mb-4">Puntaje</h3>
             <div className="space-y-1 mb-4 text-xs text-gray-400 font-semibold uppercase tracking-wider grid grid-cols-4 gap-2 px-1">
-              <span className="col-span-1">Fase</span>
+              <span className="col-span-1">Criterio</span>
               <span className="text-center">Exacto</span>
               <span className="text-center">Dif.</span>
               <span className="text-center">Gan.</span>
             </div>
+            <div className="grid grid-cols-4 gap-2 items-center bg-gray-50 p-2 rounded-xl">
+              <span className="text-xs font-semibold text-gray-600 truncate">General (todas las fases)</span>
+              <input type="number" className="w-full h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                value={puntajeConfig.grupos?.exacto ?? 4}
+                onChange={(e) => updateConfig("grupos", "exacto", parseInt(e.target.value) || 0)} />
+              <input type="number" className="w-full h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                value={puntajeConfig.grupos?.diferencia ?? 3}
+                onChange={(e) => updateConfig("grupos", "diferencia", parseInt(e.target.value) || 0)} />
+              <input type="number" className="w-full h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                value={puntajeConfig.grupos?.ganador ?? 2}
+                onChange={(e) => updateConfig("grupos", "ganador", parseInt(e.target.value) || 0)} />
+            </div>
+
+            <h4 className="text-sm font-bold text-gray-600 mt-6 mb-3">Clasificado (por equipo acertado en fase final)</h4>
+            <div className="space-y-1 mb-4 text-xs text-gray-400 font-semibold uppercase tracking-wider grid grid-cols-2 gap-2 px-1">
+              <span>Fase</span>
+              <span className="text-center">Pts por equipo</span>
+            </div>
             <div className="space-y-3">
-              {PHASES.map(({ key, label }) => {
-                const phase = puntajeConfig[key] || { exacto: 0, diferencia: 0, ganador: 0 };
+              {[
+                { key: "dieciseisavos", label: "16vos de Final" },
+                { key: "octavos", label: "8vos de Final" },
+                { key: "cuartos", label: "4tos de Final" },
+                { key: "semifinal", label: "Semifinal" },
+                { key: "tercer_puesto", label: "Tercer Puesto" },
+                { key: "final", label: "Gran Final" },
+              ].map(({ key, label }) => {
+                const val = (puntajeConfig.clasificado || {})[key] ?? 0;
                 return (
-                  <div key={key} className="grid grid-cols-4 gap-2 items-center bg-gray-50 p-2 rounded-xl">
-                    <span className="text-xs font-semibold text-gray-600 truncate">{label}</span>
-                    <input type="number" className="w-full h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
-                      value={phase.exacto}
-                      onChange={(e) => updateConfig(key, "exacto", parseInt(e.target.value) || 0)} />
-                    <input type="number" className="w-full h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
-                      value={phase.diferencia}
-                      onChange={(e) => updateConfig(key, "diferencia", parseInt(e.target.value) || 0)} />
-                    <input type="number" className="w-full h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
-                      value={phase.ganador}
-                      onChange={(e) => updateConfig(key, "ganador", parseInt(e.target.value) || 0)} />
+                  <div key={key} className="flex items-center justify-between bg-gray-50 p-2 rounded-xl">
+                    <span className="text-xs font-semibold text-gray-600">{label}</span>
+                    <input type="number" className="w-16 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                      value={val}
+                      onChange={(e) => updateConfig("clasificado", key, parseInt(e.target.value) || 0)} />
                   </div>
                 );
               })}
             </div>
+
             <h4 className="text-sm font-bold text-gray-600 mt-6 mb-3">Cuadro de Honor</h4>
             <div className="space-y-2">
               {[

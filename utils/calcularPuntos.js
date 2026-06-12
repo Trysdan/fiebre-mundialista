@@ -8,25 +8,26 @@ function obtenerGanador1X2(golesCasa, golesFuera) {
   return "X";
 }
 
-function getPuntajePorFase(juegoId, config) {
-  const id = parseInt(juegoId, 10);
-  if (isNaN(id)) return { fase: "grupos", ...config.grupos };
-  if (id >= 104) return { fase: "final", ...config.final };
-  if (id >= 103) return { fase: "tercer_puesto", ...config.tercer_puesto };
-  if (id >= 101) return { fase: "semifinal", ...config.semifinal };
-  if (id >= 97) return { fase: "cuartos", ...config.cuartos };
-  if (id >= 89) return { fase: "octavos", ...config.octavos };
-  return { fase: "dieciseisavos", ...config.dieciseisavos };
-}
-
 const CONFIG_DEFAULT = {
   grupos: { exacto: 4, diferencia: 3, ganador: 2 },
-  dieciseisavos: { exacto: 5, diferencia: 4, ganador: 2 },
-  octavos: { exacto: 6, diferencia: 4, ganador: 3 },
-  cuartos: { exacto: 7, diferencia: 5, ganador: 3 },
-  semifinal: { exacto: 8, diferencia: 6, ganador: 4 },
-  tercer_puesto: { exacto: 9, diferencia: 6, ganador: 4 },
-  final: { exacto: 11, diferencia: 8, ganador: 5 },
+  clasificado: {
+    dieciseisavos: 0, octavos: 0, cuartos: 0,
+    semifinal: 0, tercer_puesto: 0, final: 0,
+  },
+  cuadro_de_honor: {
+    campeon: 15, subcampeon: 10, tercer_puesto: 5,
+    bota_oro: 8, bota_plata: 5, bota_bronce: 3,
+    balon_oro: 8, balon_plata: 5, balon_bronce: 3,
+  },
+};
+
+const FASE_LABELS = {
+  dieciseisavos: "Dieciseisavos de Final",
+  octavos: "Octavos de Final",
+  cuartos: "Cuartos de Final",
+  semifinal: "Semifinal",
+  tercer_puesto: "Tercer Lugar",
+  final: "Gran Final",
 };
 
 function evaluarPartidoGrupo(pronostico, resultadoReal, config) {
@@ -53,7 +54,7 @@ function esNombreGenerico(nombre) {
   return /°\s*Grupo|Ganador\s+\d+|^\d+°/.test(nombre);
 }
 
-export { evaluarPartidoGrupo, evaluarPartidoEliminatoria, getPuntajePorFase, esNombreGenerico };
+export { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico };
 
 function evaluarPartidoEliminatoria(pronostico, resultadoReal, config, matchData, quinielaPartido) {
   if (matchData && quinielaPartido) {
@@ -126,6 +127,7 @@ function evaluarCuadroDeHonor(quiniela, resultadosReales, config) {
 
 export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig, partidos) {
   const config = puntajeConfig || CONFIG_DEFAULT;
+  const puntajeBase = config.grupos || CONFIG_DEFAULT.grupos;
   let totalPuntos = 0;
   const detalle = [];
 
@@ -141,7 +143,7 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
     for (const partido of grupo.partidos || []) {
       const resultado = resultadosReales[partido.partido_id];
       if (!resultado) continue;
-      const pts = evaluarPartidoGrupo(partido.pronostico, resultado, config.grupos);
+      const pts = evaluarPartidoGrupo(partido.pronostico, resultado, puntajeBase);
       totalPuntos += pts;
       detalle.push({ partido_id: partido.partido_id, pts, fase: "grupos" });
     }
@@ -153,11 +155,46 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
       const id = partido.juego_id || partido.partido_id;
       const resultado = resultadosReales[id];
       if (!resultado) continue;
-      const faseConfig = getPuntajePorFase(id, config);
       const matchData = idxPartidos[id];
-      const pts = evaluarPartidoEliminatoria(partido.pronostico, resultado, faseConfig, matchData, partido);
+      const pts = evaluarPartidoEliminatoria(partido.pronostico, resultado, puntajeBase, matchData, partido);
       totalPuntos += pts;
       detalle.push({ partido_id: id, pts, fase: faseKey });
+    }
+  }
+
+  const clasifConfig = config.clasificado || CONFIG_DEFAULT.clasificado;
+  for (const [faseKey, ptsPorAcierto] of Object.entries(clasifConfig)) {
+    if (!ptsPorAcierto) continue;
+    const faseLabel = FASE_LABELS[faseKey];
+    if (!faseLabel) continue;
+
+    const predPartidos = (quiniela.fase_final || {})[faseKey] || [];
+    const predEquipos = new Set();
+    for (const p of predPartidos) {
+      const c = (p.casa || "").trim().toLowerCase();
+      const f = (p.fuera || "").trim().toLowerCase();
+      if (c && c !== "nan") predEquipos.add(c);
+      if (f && f !== "nan") predEquipos.add(f);
+    }
+
+    const realPartidos = (partidos || []).filter((m) => m.fase === faseLabel);
+    const realEquipos = new Set();
+    for (const m of realPartidos) {
+      const c = (m.casa || m.equipos?.local || "").trim().toLowerCase();
+      const f = (m.fuera || m.equipos?.visitante || "").trim().toLowerCase();
+      if (c && c !== "nan") realEquipos.add(c);
+      if (f && f !== "nan") realEquipos.add(f);
+    }
+
+    let aciertos = 0;
+    for (const eq of predEquipos) {
+      if (realEquipos.has(eq)) aciertos++;
+    }
+
+    const puntos = aciertos * ptsPorAcierto;
+    totalPuntos += puntos;
+    if (puntos > 0) {
+      detalle.push({ fase: `clasificado_${faseKey}`, pts: puntos, aciertos });
     }
   }
 
