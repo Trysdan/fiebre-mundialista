@@ -372,6 +372,61 @@ export default function App() {
                         </p>
                       )}
                     </div>
+
+                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                      <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                        Criterios de Puntaje
+                      </h4>
+                      <div className="text-xs space-y-3">
+                        <div className="flex items-center gap-3 bg-gray-50 rounded-xl px-3 py-2">
+                          <span className="font-semibold text-gray-600 w-28">Resultado exacto</span>
+                          <span className="font-bold text-blue-600">{puntajeConfig.grupos?.exacto ?? 4} pts</span>
+                          <span className="text-gray-400">·</span>
+                          <span className="text-gray-500">Diferencia {puntajeConfig.grupos?.diferencia ?? 3} pts</span>
+                          <span className="text-gray-400">·</span>
+                          <span className="text-gray-500">Ganador {puntajeConfig.grupos?.ganador ?? 2} pts</span>
+                        </div>
+                        <p className="text-gray-400 font-medium">Clasificado a siguiente ronda (por equipo acertado):</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { key: "dieciseisavos", label: "16vos" },
+                            { key: "octavos", label: "8vos" },
+                            { key: "cuartos", label: "4tos" },
+                            { key: "semifinal", label: "Semifinal" },
+                            { key: "tercer_puesto", label: "3er Puesto" },
+                            { key: "final", label: "Final" },
+                          ].map(({ key, label }) => {
+                            const val = (puntajeConfig.clasificado || {})[key] ?? 0;
+                            return val ? (
+                              <span key={key} className="bg-amber-50 text-amber-700 font-semibold px-2.5 py-1 rounded-lg">
+                                {label}: {val} pts
+                              </span>
+                            ) : null;
+                          })}
+                        </div>
+                        <p className="text-gray-400 font-medium pt-1">Cuadro de Honor:</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {[
+                            { key: "campeon", label: "Campeón" },
+                            { key: "subcampeon", label: "Subcampeón" },
+                            { key: "tercer_puesto", label: "3.er Lugar" },
+                            { key: "bota_oro", label: "Bota de Oro" },
+                            { key: "bota_plata", label: "Bota de Plata" },
+                            { key: "bota_bronce", label: "Bota de Bronce" },
+                            { key: "balon_oro", label: "Balón de Oro" },
+                            { key: "balon_plata", label: "Balón de Plata" },
+                            { key: "balon_bronce", label: "Balón de Bronce" },
+                          ].map(({ key, label }) => {
+                            const val = (puntajeConfig.cuadro_de_honor || {})[key] ?? 0;
+                            return val ? (
+                              <span key={key} className="bg-green-50 text-green-700 font-semibold px-2.5 py-1 rounded-lg">
+                                {label}: {val} pts
+                              </span>
+                            ) : null;
+                          })}
+                        </div>
+                      </div>
+                    </div>
                   </section>
 
                   <Leaderboard
