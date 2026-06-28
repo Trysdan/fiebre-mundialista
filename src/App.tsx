@@ -416,7 +416,7 @@ export default function App() {
                         >
                           <div className="flex-1 text-center min-w-0">
                             <p className="font-bold text-gray-900 flex items-center justify-center gap-1.5 text-xs sm:text-sm truncate">
-                              {flagLocal && <span className="text-base sm:text-lg shrink-0">{flagLocal}</span>}
+                              {flagLocal && <img src={flagLocal} alt="" className="w-5 h-3.5 sm:w-6 sm:h-4 shrink-0 rounded-sm object-cover" />}
                               <span className="truncate">{equipos.local}</span>
                             </p>
                           </div>
@@ -440,7 +440,7 @@ export default function App() {
                           </div>
                           <div className="flex-1 text-center min-w-0">
                             <p className="font-bold text-gray-900 flex items-center justify-center gap-1.5 text-xs sm:text-sm truncate">
-                              {flagVisit && <span className="text-base sm:text-lg shrink-0">{flagVisit}</span>}
+                              {flagVisit && <img src={flagVisit} alt="" className="w-5 h-3.5 sm:w-6 sm:h-4 shrink-0 rounded-sm object-cover" />}
                               <span className="truncate">{equipos.visitante}</span>
                             </p>
                           </div>
