@@ -107,10 +107,6 @@ function getTeamColors(match: any, quiniela: any, partidos: any[]) {
   const realLocal = (match.casa || match.equipos?.local || "").trim();
   const realVisitante = (match.fuera || match.equipos?.visitante || "").trim();
 
-  if (esNombreGenerico(realLocal) || esNombreGenerico(realVisitante)) {
-    return { local: null, visitante: null };
-  }
-
   const predLocal = (quinielaTeams.local || "").trim();
   const predVisitante = (quinielaTeams.visitante || "").trim();
 
@@ -119,7 +115,7 @@ function getTeamColors(match: any, quiniela: any, partidos: any[]) {
   const status = (pred: string, samePos: string, allTeams: string[]) => {
     const p = pred.toLowerCase();
     if (!p || esNombreGenerico(p)) return null;
-    if (p === samePos.toLowerCase()) return "green";
+    if (!esNombreGenerico(samePos) && p === samePos.toLowerCase()) return "green";
     if (allTeams.some((t) => t.toLowerCase() === p)) return "yellow";
     return "red";
   };

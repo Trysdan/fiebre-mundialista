@@ -43,6 +43,7 @@ export default function App() {
     telefonos: [],
   });
   const [adminCreds, setAdminCreds] = useState({ usuario: "admin", password: "admin" });
+  const [disabledPhases, setDisabledPhases] = useState<string[]>([]);
   const [isPreview, setIsPreview] = useState(false);
 
   const SIMULATED_TODAY = new Date().toLocaleDateString("en-CA", { timeZone: "America/Caracas" });
@@ -57,6 +58,7 @@ export default function App() {
       if (json.puntajeConfig) setPuntajeConfig(json.puntajeConfig);
       if (json.contacto) setContacto(json.contacto);
       if (json.adminCreds) setAdminCreds(json.adminCreds);
+      if (json.disabledPhases) setDisabledPhases(json.disabledPhases);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -162,6 +164,19 @@ export default function App() {
       if (res.ok) setAdminCreds(creds);
     } catch (err) {
       console.error("Error saving admin creds:", err);
+    }
+  };
+
+  const handleSaveDisabledPhases = async (phases: string[]) => {
+    try {
+      const res = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "disabled_phases", disabledPhases: phases }),
+      });
+      if (res.ok) setDisabledPhases(phases);
+    } catch (err) {
+      console.error("Error saving disabled phases:", err);
     }
   };
 
@@ -438,6 +453,7 @@ export default function App() {
                     resultados={resultados}
                     puntajeConfig={puntajeConfig}
                     partidos={partidos}
+                    disabledPhases={disabledPhases}
                     onSelectQuiniela={(nombre) => {
                       setActivePanel("PARTICIPANTE");
                       setSelectedUser(nombre);
@@ -532,12 +548,14 @@ export default function App() {
                 contacto={contacto}
                 adminCreds={adminCreds}
                 quinielas={quinielas}
+                disabledPhases={disabledPhases}
                 onSaveResultados={handleSaveResultados}
                 onSavePuntajeConfig={handleSavePuntajeConfig}
                 onSavePartidos={handleSavePartidos}
                 onSaveCuadroHonor={handleSaveCuadroHonor}
                 onSaveContacto={handleSaveContacto}
                 onSaveAdminCreds={handleSaveAdminCreds}
+                onSaveDisabledPhases={handleSaveDisabledPhases}
                 onDeleteQuiniela={handleDeleteQuiniela}
                 onRefresh={fetchData}
                 isPreview={isPreview}
