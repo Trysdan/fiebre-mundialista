@@ -1,13 +1,29 @@
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
+function getSchema(): string | null {
+  if (process.env.VERCEL_ENV === 'preview') {
+    return 'preview';
+  }
+  return null;
+}
+
 async function fetchSupabase(path: string, options?: RequestInit) {
-  const res = await fetch(`${supabaseUrl}/rest/v1/${path}`, {
+  const schema = getSchema();
+  const url = `${supabaseUrl}/rest/v1/${path}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    apikey: supabaseKey,
+    Authorization: `Bearer ${supabaseKey}`,
+  };
+  if (schema) {
+    headers["Content-Profile"] = schema;
+    headers["Accept-Profile"] = schema;
+  }
+  const res = await fetch(url, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
-      apikey: supabaseKey,
-      Authorization: `Bearer ${supabaseKey}`,
+      ...headers,
       ...(options?.headers || {}),
     },
   });

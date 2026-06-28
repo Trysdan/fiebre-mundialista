@@ -7,6 +7,7 @@ const DATA = join(__dirname, "..", "data");
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SCHEMA = process.env.SCHEMA || "public";
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error("Faltan NEXT_PUBLIC_SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY");
@@ -14,24 +15,32 @@ if (!SUPABASE_URL || !SUPABASE_KEY) {
 }
 
 async function upsert(key, value) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/app_data`, {
+  const url = `${SUPABASE_URL}/rest/v1/app_data`;
+  const headers = {
+    "Content-Type": "application/json",
+    "apikey": SUPABASE_KEY,
+    "Authorization": `Bearer ${SUPABASE_KEY}`,
+    "Prefer": "resolution=merge-duplicates",
+  };
+  if (SCHEMA !== "public") {
+    headers["Content-Profile"] = SCHEMA;
+    headers["Accept-Profile"] = SCHEMA;
+  }
+  const res = await fetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
-      "Prefer": "resolution=merge-duplicates",
-    },
+    headers,
     body: JSON.stringify({ key, value }),
   });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(`Error upsert ${key}: ${res.status} ${text}`);
   }
-  console.log(`✓ ${key}`);
+  console.log(`✓ [${SCHEMA}] ${key}`);
 }
 
 async function seed() {
+  console.log(`Seed en schema: ${SCHEMA}`);
+
   const partidos = JSON.parse(readFileSync(join(DATA, "data_partidos.json"), "utf-8"));
   await upsert("partidos", partidos);
 
@@ -47,8 +56,7 @@ async function seed() {
 
   await upsert("admin_creds", { usuario: "admin", password: "admin" });
 
-  console.log("✓ admin_creds");
-  console.log("\nSeed completado.");
+  console.log(`\nSeed completado en schema: ${SCHEMA}`);
 }
 
 seed().catch((err) => {
