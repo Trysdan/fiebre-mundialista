@@ -1,6 +1,7 @@
 "use client";
 
-import { Trophy } from "lucide-react";
+import { Trophy, ChevronUp, ChevronDown } from "lucide-react";
+import { useState, useMemo } from "react";
 import calcularPuntos from "@/utils/calcularPuntos";
 
 interface LeaderboardProps {
@@ -52,34 +53,58 @@ function computePhaseTotals(quiniela: any, resultados: Record<string, any>, punt
 }
 
 export default function Leaderboard({ quinielas, resultados, puntajeConfig, partidos, onSelectQuiniela }: LeaderboardProps) {
-  const entries = quinielas
-    .map((q) => {
+  const [sortKey, setSortKey] = useState("total");
+  const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
+
+  const allKeys = useMemo(() => {
+    const keys = new Set<string>();
+    for (const q of quinielas) {
+      const { phaseTotals } = computePhaseTotals(q, resultados, puntajeConfig, partidos);
+      for (const k of Object.keys(phaseTotals)) keys.add(k);
+    }
+    return keys;
+  }, [quinielas, resultados, puntajeConfig, partidos]);
+
+  const phaseKeys = PHASE_ORDER.filter((k) => allKeys.has(k));
+
+  const entries = useMemo(() => {
+    const raw = quinielas.map((q) => {
       const { total, phaseTotals } = computePhaseTotals(q, resultados, puntajeConfig, partidos);
-      return {
-        nombre: q.participante || "Desconocido",
-        puntos: total,
-        phaseTotals,
-      };
-    })
-    .sort((a, b) => b.puntos - a.puntos);
+      return { nombre: q.participante || "Desconocido", puntos: total, phaseTotals };
+    });
 
-  const allPhaseKeys = new Set<string>();
-  for (const e of entries) {
-    for (const key of Object.keys(e.phaseTotals)) {
-      allPhaseKeys.add(key);
+    raw.sort((a, b) => {
+      const getVal = (entry: typeof a) =>
+        sortKey === "total" ? entry.puntos : entry.phaseTotals[sortKey] || 0;
+      const diff = getVal(b) - getVal(a);
+      return sortDir === "desc" ? diff : -diff;
+    });
+
+    return raw;
+  }, [quinielas, resultados, puntajeConfig, partidos, sortKey, sortDir]);
+
+  const positions = useMemo(() => {
+    const pos: number[] = [];
+    for (let i = 0; i < entries.length; i++) {
+      if (i === 0 || entries[i].puntos !== entries[i - 1].puntos) {
+        pos.push(i + 1);
+      } else {
+        pos.push(pos[i - 1]);
+      }
     }
-  }
-  const phaseKeys = PHASE_ORDER.filter((k) => allPhaseKeys.has(k));
-  const colCount = 2 + phaseKeys.length + 1;
+    return pos;
+  }, [entries]);
 
-  const positions: number[] = [];
-  for (let i = 0; i < entries.length; i++) {
-    if (i === 0 || entries[i].puntos !== entries[i - 1].puntos) {
-      positions.push(i + 1);
+  function handleSort(key: string) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === "desc" ? "asc" : "desc"));
     } else {
-      positions.push(positions[i - 1]);
+      setSortKey(key);
+      setSortDir("desc");
     }
   }
+
+  const colCount = 2 + phaseKeys.length + 1;
 
   return (
     <section>
@@ -94,9 +119,23 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
               <th className="px-3 py-3 w-10">Pos</th>
               <th className="px-3 py-3">Nombre</th>
               {phaseKeys.map((k) => (
-                <th key={k} className="px-2 py-3 text-center text-[10px]">{k}</th>
+                <th key={k} className="px-2 py-3 text-center text-[10px]">
+                  <button onClick={() => handleSort(k)} className="inline-flex items-center justify-center gap-0.5 hover:text-gray-700 transition-colors">
+                    {k}
+                    {sortKey === k ? (
+                      sortDir === "desc" ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />
+                    ) : null}
+                  </button>
+                </th>
               ))}
-              <th className="px-3 py-3 text-right">Total</th>
+              <th className="px-3 py-3 text-right">
+                <button onClick={() => handleSort("total")} className="inline-flex items-center justify-end gap-0.5 hover:text-gray-700 transition-colors">
+                  Total
+                  {sortKey === "total" ? (
+                    sortDir === "desc" ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />
+                  ) : null}
+                </button>
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
