@@ -79,9 +79,10 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
       return { nombre: q.participante || "Desconocido", puntos: total, phaseTotals };
     });
 
+    const getVal = (entry: typeof raw[0]) =>
+      sortKey === "total" ? entry.puntos : entry.phaseTotals[sortKey] || 0;
+
     raw.sort((a, b) => {
-      const getVal = (entry: typeof a) =>
-        sortKey === "total" ? entry.puntos : entry.phaseTotals[sortKey] || 0;
       const diff = getVal(b) - getVal(a);
       return sortDir === "desc" ? diff : -diff;
     });
@@ -90,16 +91,21 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
   }, [quinielas, resultados, puntajeConfig, partidos, sortKey, sortDir]);
 
   const positions = useMemo(() => {
+    const getVal = (entry: typeof entries[0]) =>
+      sortKey === "total" ? entry.puntos : entry.phaseTotals[sortKey] || 0;
+
     const pos: number[] = [];
     for (let i = 0; i < entries.length; i++) {
-      if (i === 0 || entries[i].puntos !== entries[i - 1].puntos) {
+      const curr = getVal(entries[i]);
+      const prev = i > 0 ? getVal(entries[i - 1]) : undefined;
+      if (i === 0 || curr !== prev) {
         pos.push(i + 1);
       } else {
         pos.push(pos[i - 1]);
       }
     }
     return pos;
-  }, [entries]);
+  }, [entries, sortKey]);
 
   function handleSort(key: string) {
     if (key === sortKey) {
