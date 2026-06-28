@@ -105,17 +105,17 @@ export default function AdminPanel({
   }, []);
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_SKIP_LOGIN === 'true') {
-      fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: "admin", password: "admin" }),
-      }).then((res) => {
-        if (res.ok) {
-          setIsLoggedIn(true);
-        }
-      }).catch(() => {});
-    }
+    fetch("/api/env").then((r) => r.json()).then((env) => {
+      if (env.isPreview) {
+        fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username: "admin", password: "admin" }),
+        }).then((res) => {
+          if (res.ok) setIsLoggedIn(true);
+        }).catch(() => {});
+      }
+    }).catch(() => {});
   }, []);
 
   const handleSaveParticipante = async () => {
