@@ -12,7 +12,7 @@ interface LeaderboardProps {
   onSelectQuiniela?: (nombre: string) => void;
 }
 
-const PHASE_ORDER = ["J1", "J2", "J3", "16vos", "8vos", "4tos", "Semifinal", "3er Puesto", "Final", "Cuadro"];
+const PHASE_ORDER = ["J1", "J2", "J3", "Grupos", "16vos", "8vos", "4tos", "Semifinal", "3er Puesto", "Final", "Cuadro"];
 
 const PHASE_DISPLAY: Record<string, string> = {
   dieciseisavos: "16vos",
@@ -47,6 +47,12 @@ function computePhaseTotals(quiniela: any, resultados: Record<string, any>, punt
       phase = PHASE_DISPLAY[d.fase] || d.fase;
     }
     phaseTotals[phase] = (phaseTotals[phase] || 0) + d.pts;
+  }
+
+  const gruposTotal =
+    (phaseTotals["J1"] || 0) + (phaseTotals["J2"] || 0) + (phaseTotals["J3"] || 0);
+  if (gruposTotal > 0 || phaseTotals["J1"] !== undefined) {
+    phaseTotals["Grupos"] = gruposTotal;
   }
 
   return { total, phaseTotals };
