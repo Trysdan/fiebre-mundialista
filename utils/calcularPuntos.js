@@ -125,7 +125,7 @@ function evaluarCuadroDeHonor(quiniela, resultadosReales, config) {
   return { pts, detalle };
 }
 
-export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig, partidos) {
+export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig, partidos, disabledPhases = []) {
   const config = puntajeConfig || CONFIG_DEFAULT;
   const puntajeBase = config.grupos || CONFIG_DEFAULT.grupos;
   let totalPuntos = 0;
@@ -151,12 +151,13 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
 
   const faseFinal = quiniela.fase_final || {};
   for (const [faseKey, partidosArr] of Object.entries(faseFinal)) {
+    const disabled = (disabledPhases || []).includes(faseKey);
     for (const partido of partidosArr || []) {
       const id = partido.juego_id || partido.partido_id;
       const resultado = resultadosReales[id];
       if (!resultado) continue;
       const matchData = idxPartidos[id];
-      const pts = evaluarPartidoEliminatoria(partido.pronostico, resultado, puntajeBase, matchData, partido);
+      const pts = disabled ? 0 : evaluarPartidoEliminatoria(partido.pronostico, resultado, puntajeBase, matchData, partido);
       totalPuntos += pts;
       detalle.push({ partido_id: id, pts, fase: faseKey });
     }
@@ -165,6 +166,7 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
   const clasifConfig = config.clasificado || CONFIG_DEFAULT.clasificado;
   for (const [faseKey, ptsPorAcierto] of Object.entries(clasifConfig)) {
     if (!ptsPorAcierto) continue;
+    if ((disabledPhases || []).includes(faseKey)) continue;
     const faseLabel = FASE_LABELS[faseKey];
     if (!faseLabel) continue;
 

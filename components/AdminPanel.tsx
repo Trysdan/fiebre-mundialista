@@ -24,12 +24,14 @@ interface AdminPanelProps {
   contacto?: { email: string; telefonos: string[] };
   adminCreds?: { usuario: string; password: string };
   quinielas?: any[];
+  disabledPhases?: string[];
   onSaveResultados: (resultados: Record<string, any>) => Promise<void>;
   onSavePuntajeConfig: (config: any) => Promise<void>;
   onSavePartidos?: (partidos: Record<string, { casa: string; fuera: string }>) => Promise<void>;
   onSaveCuadroHonor?: (cuadro: Record<string, string>) => Promise<void>;
   onSaveContacto?: (data: { email: string; telefonos: string[] }) => Promise<void>;
   onSaveAdminCreds?: (creds: { usuario: string; password: string }) => Promise<void>;
+  onSaveDisabledPhases?: (phases: string[]) => Promise<void>;
   onDeleteQuiniela?: (participante: string) => Promise<void>;
   onRefresh?: () => Promise<void>;
   isPreview?: boolean;
@@ -52,12 +54,14 @@ export default function AdminPanel({
   contacto: initialContacto,
   adminCreds: initialCreds,
   quinielas,
+  disabledPhases: initialDisabledPhases = [],
   onSaveResultados,
   onSavePuntajeConfig,
   onSavePartidos,
   onSaveCuadroHonor,
   onSaveContacto,
   onSaveAdminCreds,
+  onSaveDisabledPhases,
   onDeleteQuiniela,
   onRefresh,
   isPreview,
@@ -84,12 +88,17 @@ export default function AdminPanel({
   const [uploading, setUploading] = useState(false);
   const [resultadosOpen, setResultadosOpen] = useState(true);
   const [resultadosSections, setResultadosSections] = useState<Record<string, boolean>>({});
+  const [localDisabledPhases, setLocalDisabledPhases] = useState<string[]>(initialDisabledPhases);
   const fileInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (isPreview) {
       setIsLoggedIn(true);
     }
   }, [isPreview]);
+
+  useEffect(() => {
+    setLocalDisabledPhases(initialDisabledPhases);
+  }, [initialDisabledPhases]);
 
   const handleKeyEnter = (e: React.KeyboardEvent, fn: () => void) => {
     if (e.key === "Enter") { e.preventDefault(); fn(); }
@@ -630,6 +639,36 @@ export default function AdminPanel({
         </div>
 
         <div className="space-y-8">
+          {/* Control de Fases */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 className="text-lg font-bold mb-4">Control de Fases</h3>
+            <p className="text-xs text-gray-400 mb-4">Deshabilita fases para que no sumen puntos (útil para revisión).</p>
+            {[
+              { key: "dieciseisavos", label: "16vos de Final" },
+            ].map(({ key, label }) => (
+              <label key={key} className="flex items-center justify-between bg-gray-50 p-3 rounded-xl cursor-pointer">
+                <span className="text-sm font-semibold text-gray-700">{label}</span>
+                <input
+                  type="checkbox"
+                  checked={!localDisabledPhases.includes(key)}
+                  onChange={() => {
+                    setLocalDisabledPhases((prev) =>
+                      prev.includes(key) ? prev.filter((p) => p !== key) : [...prev, key]
+                    );
+                  }}
+                  className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+              </label>
+            ))}
+            <button
+              onClick={() => onSaveDisabledPhases?.(localDisabledPhases)}
+              className="mt-4 w-full bg-green-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md hover:bg-green-700 transition-colors text-sm"
+            >
+              <Save className="w-4 h-4" />
+              Guardar Control de Fases
+            </button>
+          </div>
+
           {/* Configuración de Puntos */}
           <div id="sec-puntaje" className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <h3 className="text-lg font-bold mb-4">Puntaje</h3>

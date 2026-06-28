@@ -16,6 +16,7 @@ export async function GET() {
       puntajeConfig: map.puntaje_config || {},
       contacto: map.contacto || { email: "", telefonos: [] },
       adminCreds: map.admin_creds || { usuario: "admin", password: "admin" },
+      disabledPhases: map.disabled_phases || [],
       quinielas,
     });
   } catch (error) {

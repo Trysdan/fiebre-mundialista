@@ -57,6 +57,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Participante eliminado" });
     }
 
+    if (type === "disabled_phases") {
+      await upsertRow("disabled_phases", body.disabledPhases);
+      return NextResponse.json({ success: true, message: "Fases deshabilitadas actualizadas" });
+    }
+
     return NextResponse.json({ error: "Tipo de operación no válido" }, { status: 400 });
   } catch (error) {
     console.error("Error en admin:", error);
