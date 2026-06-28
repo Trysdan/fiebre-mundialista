@@ -8,6 +8,8 @@ import {
   Home,
   Search,
   Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
   Mail,
   MessageCircle,
 } from "lucide-react";
@@ -15,6 +17,7 @@ import { motion, AnimatePresence } from "motion/react";
 import Leaderboard from "@/components/Leaderboard";
 import Fixture from "@/components/Fixture";
 import AdminPanel from "@/components/AdminPanel";
+import { getTeamFlag } from "@/lib/flags";
 
 type Panel = "INICIO" | "PARTICIPANTE" | "ADMINISTRADOR";
 
@@ -45,6 +48,7 @@ export default function App() {
   const [adminCreds, setAdminCreds] = useState({ usuario: "admin", password: "admin" });
   const [disabledPhases, setDisabledPhases] = useState<string[]>([]);
   const [isPreview, setIsPreview] = useState(false);
+  const [viewDate, setViewDate] = useState("");
 
   const SIMULATED_TODAY = new Date().toLocaleDateString("en-CA", { timeZone: "America/Caracas" });
 
@@ -66,10 +70,11 @@ export default function App() {
 
   useEffect(() => {
     fetchData();
+    setViewDate(SIMULATED_TODAY);
     fetch("/api/env").then((r) => r.json()).then((env) => {
       setIsPreview(env.isPreview);
     }).catch(() => {});
-  }, [fetchData]);
+  }, [fetchData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,7 +223,34 @@ export default function App() {
     setSelectedQuiniela(null);
   };
 
-  const matchesToday = partidos.filter((m) => m.fecha === SIMULATED_TODAY);
+  const allDates = useMemo(() => {
+    return [...new Set(partidos.map((m) => m.fecha))].sort();
+  }, [partidos]);
+
+  const currentDateIndex = allDates.indexOf(viewDate);
+
+  const matchesForDate = useMemo(() => {
+    if (!viewDate) return [];
+    return partidos.filter((m) => m.fecha === viewDate);
+  }, [partidos, viewDate]);
+
+  const goPrevDate = () => {
+    if (currentDateIndex > 0) setViewDate(allDates[currentDateIndex - 1]);
+  };
+
+  const goNextDate = () => {
+    if (currentDateIndex < allDates.length - 1) setViewDate(allDates[currentDateIndex + 1]);
+  };
+
+  const goToday = () => setViewDate(SIMULATED_TODAY);
+
+  const formatDateLabel = (dateStr: string) => {
+    const [y, m, d] = dateStr.split("-").map(Number);
+    const date = new Date(y, m - 1, d);
+    return date.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
+  };
+
+  const isToday = viewDate === SIMULATED_TODAY;
 
   return (
     <div className="min-h-screen font-sans text-gray-900 pb-24 md:pb-0">
@@ -339,24 +371,53 @@ export default function App() {
 
                 <div className="grid md:grid-cols-2 gap-8">
                   <section>
-                    <div className="flex items-center gap-2 mb-4">
-                      <CalendarIcon className="text-blue-600 w-6 h-6" />
-                      <h3 className="text-xl font-bold text-gray-800">
-                        Partidos del Día
-                      </h3>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <CalendarIcon className="text-blue-600 w-5 h-5 sm:w-6 sm:h-6" />
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-800">
+                          Partidos
+                        </h3>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button onClick={goPrevDate} disabled={currentDateIndex <= 0}
+                          className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                          <ChevronLeft className="w-5 h-5 text-gray-600" />
+                        </button>
+                        <button onClick={goToday}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors ${
+                            isToday ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100 text-gray-500"
+                          }`}>
+                          Hoy
+                        </button>
+                        <button onClick={goNextDate} disabled={currentDateIndex < 0 || currentDateIndex >= allDates.length - 1}
+                          className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                          <ChevronRight className="w-5 h-5 text-gray-600" />
+                        </button>
+                      </div>
                     </div>
-                    <div className="space-y-4">
-                      {matchesToday.map((match) => {
+                    {viewDate && (
+                      <p className="text-xs font-semibold text-gray-400 capitalize mb-4 text-center sm:text-left">
+                        {formatDateLabel(viewDate)}
+                        {!isToday && (
+                          <span className="text-gray-300 font-normal ml-2">(hoy es {formatDateLabel(SIMULATED_TODAY)})</span>
+                        )}
+                      </p>
+                    )}
+                    <div className="space-y-3">
+                      {matchesForDate.map((match) => {
                         const equipos = parseMatchTeams(match);
                         const real = resultados[match.partido_id];
+                        const flagLocal = getTeamFlag(equipos.local);
+                        const flagVisit = getTeamFlag(equipos.visitante);
                         return (
                         <div
                           key={match.partido_id}
-                          className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between"
+                          className="bg-white p-3 sm:p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between gap-2"
                         >
-                          <div className="text-center w-1/3 min-w-0">
-                            <p className="font-bold text-gray-900 h-12 flex items-center justify-center text-xs sm:text-sm truncate px-1">
-                              {equipos.local}
+                          <div className="flex-1 text-center min-w-0">
+                            <p className="font-bold text-gray-900 flex items-center justify-center gap-1.5 text-xs sm:text-sm truncate">
+                              {flagLocal && <img src={flagLocal} alt="" className="w-5 h-3.5 sm:w-6 sm:h-4 shrink-0 rounded-sm object-cover" />}
+                              <span className="truncate">{equipos.local}</span>
                             </p>
                           </div>
                           <div className="text-center shrink-0">
@@ -371,23 +432,24 @@ export default function App() {
                                 </span>
                               </div>
                             ) : (
-                              <p className="text-xl sm:text-2xl font-black text-blue-600">VS</p>
+                              <p className="text-lg sm:text-2xl font-black text-blue-600">VS</p>
                             )}
                             <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest mt-1">
                               {match.hora}
                             </p>
                           </div>
-                          <div className="text-center w-1/3 min-w-0">
-                            <p className="font-bold text-gray-900 h-12 flex items-center justify-center text-xs sm:text-sm truncate px-1">
-                              {equipos.visitante}
+                          <div className="flex-1 text-center min-w-0">
+                            <p className="font-bold text-gray-900 flex items-center justify-center gap-1.5 text-xs sm:text-sm truncate">
+                              {flagVisit && <img src={flagVisit} alt="" className="w-5 h-3.5 sm:w-6 sm:h-4 shrink-0 rounded-sm object-cover" />}
+                              <span className="truncate">{equipos.visitante}</span>
                             </p>
                           </div>
                         </div>
                         );
                       })}
-                      {matchesToday.length === 0 && (
-                        <p className="text-gray-500 italic">
-                          No hay partidos programados para hoy.
+                      {matchesForDate.length === 0 && viewDate && (
+                        <p className="text-gray-500 italic text-center py-6">
+                          No hay partidos programados para esta fecha.
                         </p>
                       )}
                     </div>
