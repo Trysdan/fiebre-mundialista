@@ -43,6 +43,7 @@ export default function App() {
     telefonos: [],
   });
   const [adminCreds, setAdminCreds] = useState({ usuario: "admin", password: "admin" });
+  const [isPreview, setIsPreview] = useState(false);
 
   const SIMULATED_TODAY = new Date().toLocaleDateString("en-CA", { timeZone: "America/Caracas" });
 
@@ -63,6 +64,9 @@ export default function App() {
 
   useEffect(() => {
     fetchData();
+    fetch("/api/env").then((r) => r.json()).then((env) => {
+      setIsPreview(env.isPreview);
+    }).catch(() => {});
   }, [fetchData]);
 
   const handleSearch = (e: React.FormEvent) => {
@@ -536,6 +540,7 @@ export default function App() {
                 onSaveAdminCreds={handleSaveAdminCreds}
                 onDeleteQuiniela={handleDeleteQuiniela}
                 onRefresh={fetchData}
+                isPreview={isPreview}
               />
             )}
           </motion.div>

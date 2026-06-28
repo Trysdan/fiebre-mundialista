@@ -32,6 +32,7 @@ interface AdminPanelProps {
   onSaveAdminCreds?: (creds: { usuario: string; password: string }) => Promise<void>;
   onDeleteQuiniela?: (participante: string) => Promise<void>;
   onRefresh?: () => Promise<void>;
+  isPreview?: boolean;
 }
 
 function parseMatchTeams(match: any) {
@@ -59,6 +60,7 @@ export default function AdminPanel({
   onSaveAdminCreds,
   onDeleteQuiniela,
   onRefresh,
+  isPreview,
 }: AdminPanelProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
@@ -102,20 +104,6 @@ export default function AdminPanel({
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
-
-  useEffect(() => {
-    fetch("/api/env").then((r) => r.json()).then((env) => {
-      if (env.isPreview) {
-        fetch("/api/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username: "admin", password: "admin" }),
-        }).then((res) => {
-          if (res.ok) setIsLoggedIn(true);
-        }).catch(() => {});
-      }
-    }).catch(() => {});
   }, []);
 
   const handleSaveParticipante = async () => {
@@ -242,7 +230,7 @@ export default function AdminPanel({
     });
   };
 
-  if (!isLoggedIn) {
+  if (!isPreview && !isLoggedIn) {
     return (
       <div className="max-w-md mx-auto py-20">
         <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
