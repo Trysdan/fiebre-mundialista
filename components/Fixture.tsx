@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, XCircle, MapPin } from "lucide-react";
-import { evaluarPartidoGrupo, evaluarPartidoEliminatoria } from "@/utils/calcularPuntos";
+import { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico } from "@/utils/calcularPuntos";
 
 interface FixtureProps {
   partidos: any[];
@@ -87,7 +87,66 @@ function getPointsForMatch(match: any, quiniela: any, resultados: Record<string,
   return evaluarPartidoEliminatoria(pred, real, faseConfig, match, quinielaPartido);
 }
 
-function MatchCard({ match, prediction, real, status, quiniela, points }: any) {
+function getAllPhaseTeams(fase: string, partidos: any[]) {
+  return (partidos || [])
+    .filter((m: any) => m.fase === fase)
+    .flatMap((m: any) => {
+      const teams: string[] = [];
+      const c = m.casa || m.equipos?.local || "";
+      const f = m.fuera || m.equipos?.visitante || "";
+      if (c) teams.push(c.trim());
+      if (f) teams.push(f.trim());
+      return teams;
+    });
+}
+
+function getTeamColors(match: any, quiniela: any, partidos: any[]) {
+  const quinielaTeams = getQuinielaTeams(match, quiniela);
+  if (!quinielaTeams) return { local: null, visitante: null };
+
+  const realLocal = (match.casa || match.equipos?.local || "").trim();
+  const realVisitante = (match.fuera || match.equipos?.visitante || "").trim();
+
+  if (esNombreGenerico(realLocal) || esNombreGenerico(realVisitante)) {
+    return { local: null, visitante: null };
+  }
+
+  const predLocal = (quinielaTeams.local || "").trim();
+  const predVisitante = (quinielaTeams.visitante || "").trim();
+
+  const phaseTeams = getAllPhaseTeams(match.fase, partidos);
+
+  const status = (pred: string, samePos: string, allTeams: string[]) => {
+    const p = pred.toLowerCase();
+    if (!p || esNombreGenerico(p)) return null;
+    if (p === samePos.toLowerCase()) return "green";
+    if (allTeams.some((t) => t.toLowerCase() === p)) return "yellow";
+    return "red";
+  };
+
+  return {
+    local: status(predLocal, realLocal, phaseTeams),
+    visitante: status(predVisitante, realVisitante, phaseTeams),
+  };
+}
+
+function TeamBadge({ name, color }: { name: string; color: string | null }) {
+  return (
+    <span className={`font-semibold text-sm truncate flex items-center gap-1.5 ${color ? "px-2 py-0.5 rounded-lg border-2" : ""} ${
+      color === "green"
+        ? "border-green-500 bg-green-50 text-green-800"
+        : color === "yellow"
+        ? "border-amber-400 bg-amber-50 text-amber-700"
+        : color === "red"
+        ? "border-red-400 bg-red-50 text-red-700"
+        : ""
+    }`}>
+      {name}
+    </span>
+  );
+}
+
+function MatchCard({ match, prediction, real, status, quiniela, points, teamColors }: any) {
   const quinielaTeams = getQuinielaTeams(match, quiniela);
   const equipos = quinielaTeams || parseEquipos(match);
   const isKnockout = !match.fase?.startsWith("Fase de Grupos");
@@ -120,14 +179,27 @@ function MatchCard({ match, prediction, real, status, quiniela, points }: any) {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
-            {equipos.local}
-            {predWinner === equipos.local && (
-              <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
-                GANADOR
-              </span>
-            )}
-          </span>
+          {isKnockout && teamColors ? (
+            <div className="flex flex-col min-w-0 flex-1 pr-2">
+              <div className="flex items-center gap-1">
+                <TeamBadge name={equipos.local} color={teamColors.local} />
+                {predWinner === equipos.local && (
+                  <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none shrink-0">
+                    GANADOR
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
+              {equipos.local}
+              {predWinner === equipos.local && (
+                <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
+                  GANADOR
+                </span>
+              )}
+            </span>
+          )}
           <div className="flex gap-1">
             <span className="bg-gray-50 text-gray-700 w-8 h-8 rounded-lg flex items-center justify-center font-bold border border-gray-100">
               {prediction?.goles_casa ?? "-"}
@@ -141,14 +213,27 @@ function MatchCard({ match, prediction, real, status, quiniela, points }: any) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
-            {equipos.visitante}
-            {predWinner === equipos.visitante && (
-              <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
-                GANADOR
-              </span>
-            )}
-          </span>
+          {isKnockout && teamColors ? (
+            <div className="flex flex-col min-w-0 flex-1 pr-2">
+              <div className="flex items-center gap-1">
+                <TeamBadge name={equipos.visitante} color={teamColors.visitante} />
+                {predWinner === equipos.visitante && (
+                  <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none shrink-0">
+                    GANADOR
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
+              {equipos.visitante}
+              {predWinner === equipos.visitante && (
+                <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
+                  GANADOR
+                </span>
+              )}
+            </span>
+          )}
           <div className="flex gap-1">
             <span className="bg-gray-50 text-gray-700 w-8 h-8 rounded-lg flex items-center justify-center font-bold border border-gray-100">
               {prediction?.goles_fuera ?? "-"}
@@ -332,6 +417,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
                   status={getResultStatus(pred, real)}
                   quiniela={quiniela}
                   points={getPointsForMatch(match, quiniela, resultados, puntajeConfig)}
+                  teamColors={getTeamColors(match, quiniela, partidos)}
                 />);
               })}
             </div>
