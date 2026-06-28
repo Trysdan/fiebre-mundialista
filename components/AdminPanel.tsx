@@ -85,6 +85,12 @@ export default function AdminPanel({
   const [resultadosOpen, setResultadosOpen] = useState(true);
   const [resultadosSections, setResultadosSections] = useState<Record<string, boolean>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (isPreview) {
+      setIsLoggedIn(true);
+    }
+  }, [isPreview]);
+
   const handleKeyEnter = (e: React.KeyboardEvent, fn: () => void) => {
     if (e.key === "Enter") { e.preventDefault(); fn(); }
   };
