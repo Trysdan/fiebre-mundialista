@@ -22,6 +22,15 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
     })
     .sort((a, b) => b.puntos - a.puntos);
 
+  const positions: number[] = [];
+  for (let i = 0; i < entries.length; i++) {
+    if (i === 0 || entries[i].puntos !== entries[i - 1].puntos) {
+      positions.push(i + 1);
+    } else {
+      positions.push(positions[i - 1]);
+    }
+  }
+
   return (
     <section>
       <div className="flex items-center gap-2 mb-4">
@@ -40,7 +49,7 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
           <tbody className="divide-y divide-gray-100">
             {entries.map((entry, index) => (
               <tr key={index} onClick={() => onSelectQuiniela?.(entry.nombre)} className="hover:bg-gray-50 transition-colors cursor-pointer">
-                <td className="px-4 py-4 font-bold text-gray-400">{index + 1}</td>
+                <td className="px-4 py-4 font-bold text-gray-400">{positions[index]}</td>
                 <td className="px-4 py-4 font-semibold text-gray-800">{entry.nombre}</td>
                 <td className="px-4 py-4 text-right">
                   <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-bold">
