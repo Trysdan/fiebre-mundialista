@@ -231,8 +231,17 @@ export default function App() {
 
   const matchesForDate = useMemo(() => {
     if (!viewDate) return [];
-    return partidos.filter((m) => m.fecha === viewDate);
+    return partidos
+      .filter((m) => m.fecha === viewDate)
+      .sort((a, b) => a.hora.localeCompare(b.hora));
   }, [partidos, viewDate]);
+
+  const formatAMPM = (hora: string) => {
+    const [h, m] = hora.split(":").map(Number);
+    const period = h >= 12 ? "PM" : "AM";
+    const hour12 = h % 12 || 12;
+    return `${hour12}:${String(m).padStart(2, "0")} ${period}`;
+  };
 
   const goPrevDate = () => {
     if (currentDateIndex > 0) setViewDate(allDates[currentDateIndex - 1]);
@@ -435,7 +444,7 @@ export default function App() {
                               <p className="text-lg sm:text-2xl font-black text-blue-600">VS</p>
                             )}
                             <p className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest mt-1">
-                              {match.hora}
+                              {formatAMPM(match.hora)}
                             </p>
                           </div>
                           <div className="flex-1 text-center min-w-0">
