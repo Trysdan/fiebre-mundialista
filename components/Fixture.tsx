@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckCircle2, XCircle, MapPin, Plus } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, XCircle, MapPin, Plus, ChevronDown } from "lucide-react";
 import { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico } from "@/utils/calcularPuntos";
 
 interface FixtureProps {
@@ -404,6 +405,23 @@ const KNOCKOUT_PHASES = [
 ];
 
 export default function Fixture({ partidos, quiniela, resultados, puntajeConfig }: FixtureProps) {
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+
+  const toggle = (key: string) => setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  const SectionHeader = ({ sectionKey, label, defaultOpen = true }: { sectionKey: string; label: string; defaultOpen?: boolean }) => {
+    const isOpen = collapsed[sectionKey] !== undefined ? !collapsed[sectionKey] : defaultOpen;
+    return (
+      <button
+        onClick={() => toggle(sectionKey)}
+        className="w-full flex items-center justify-between text-lg font-bold text-blue-900 border-l-4 border-blue-600 pl-4 mb-4 hover:opacity-80 transition-opacity"
+      >
+        <span>{label}</span>
+        <ChevronDown className={`w-5 h-5 text-blue-400 transition-transform ${isOpen ? "" : "-rotate-90"}`} />
+      </button>
+    );
+  };
+
   if (!quiniela) {
     return <div className="text-center p-20 text-gray-400">Selecciona un participante</div>;
   }
@@ -429,9 +447,9 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
     <div className="space-y-10">
       {/* Cuadro de Honor */}
       <div>
-        <h3 className="text-lg font-bold text-blue-900 border-l-4 border-blue-600 pl-4 mb-4">
-          Cuadro de Honor
-        </h3>
+        <SectionHeader sectionKey="cuadro" label="Cuadro de Honor" />
+        {collapsed["cuadro"] ? null : (
+        <>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
             <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Campeón</span>
@@ -461,13 +479,14 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
             </div>
           ))}
         </div>
+        </>
+        )}
       </div>
 
       {/* Fase de Grupos */}
       <div>
-        <h3 className="text-lg font-bold text-blue-900 border-l-4 border-blue-600 pl-4 mb-6">
-          Fase de Grupos
-        </h3>
+        <SectionHeader sectionKey="grupos" label="Fase de Grupos" />
+        {collapsed["grupos"] ? null : (
         <div className="space-y-8">
           {Object.entries(grupos).map(([letter, matches]) => (
             <div key={letter}>
@@ -508,6 +527,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
             </div>
           ))}
         </div>
+        )}
       </div>
 
       {/* Fases Finales */}
@@ -517,11 +537,11 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
           .sort((a: any, b: any) => a.fecha.localeCompare(b.fecha) || a.hora.localeCompare(b.hora));
         if (matchesInFase.length === 0) return null;
 
+        const sectionKey = `ko_${faseLabel}`;
         return (
           <div key={faseLabel}>
-            <h3 className="text-lg font-bold text-blue-900 border-l-4 border-blue-600 pl-4 mb-6">
-              {faseLabel}
-            </h3>
+            <SectionHeader sectionKey={sectionKey} label={faseLabel} />
+            {collapsed[sectionKey] ? null : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {matchesInFase.map((match: any) => {
                 const pred = getPredictionForMatch(quiniela, match.partido_id);
@@ -541,6 +561,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
                 />);
               })}
             </div>
+            )}
           </div>
         );
       })}
