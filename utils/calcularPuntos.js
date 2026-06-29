@@ -154,20 +154,22 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
     const disabled = (disabledPhases || []).includes(faseKey);
     for (const partido of partidosArr || []) {
       const id = partido.juego_id || partido.partido_id;
-      const resultado = resultadosReales[id];
-      if (!resultado) continue;
       const matchData = idxPartidos[id];
-      const pts = disabled ? 0 : evaluarPartidoEliminatoria(partido.pronostico, resultado, puntajeBase, matchData, partido);
-      totalPuntos += pts;
-      detalle.push({ partido_id: id, pts, fase: faseKey });
+      const resultado = resultadosReales[id];
 
-      if (!disabled && matchData && partido) {
+      if (resultado) {
+        const pts = disabled ? 0 : evaluarPartidoEliminatoria(partido.pronostico, resultado, puntajeBase, matchData, partido);
+        totalPuntos += pts;
+        detalle.push({ partido_id: id, pts, fase: faseKey });
+      }
+
+      if (!disabled && matchData && partido && partido.casa && partido.fuera) {
         const rC = (matchData.casa || "").trim().toLowerCase();
         const rF = (matchData.fuera || "").trim().toLowerCase();
         if (rC && rF && !esNombreGenerico(rC) && !esNombreGenerico(rF)) {
           const pC = (partido.casa || "").trim().toLowerCase();
           const pF = (partido.fuera || "").trim().toLowerCase();
-          if (pC === rC && pF === rF) {
+          if (pC && pF && pC === rC && pF === rF) {
             const bonus = (config.clasificado || CONFIG_DEFAULT.clasificado)[faseKey] || 0;
             if (bonus > 0) {
               totalPuntos += bonus;
