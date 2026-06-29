@@ -54,6 +54,30 @@ function getResultStatus(pronostico: any, resultado: any) {
   return "incorrect";
 }
 
+function getMatchStatus(match: any, quiniela: any, pred: any, real: any) {
+  const base = getResultStatus(pred, real);
+  if (!base) return null;
+
+  const isGroup = match.fase?.startsWith("Fase de Grupos");
+  if (isGroup) return base;
+
+  const qTeams = getQuinielaTeams(match, quiniela);
+  if (!qTeams) return base;
+
+  const realLocal = (match.casa || match.equipos?.local || "").trim().toLowerCase();
+  const realVisit = (match.fuera || match.equipos?.visitante || "").trim().toLowerCase();
+  const predLocal = qTeams.local.trim().toLowerCase();
+  const predVisit = qTeams.visitante.trim().toLowerCase();
+
+  if (realLocal && realVisit && !esNombreGenerico(realLocal) && !esNombreGenerico(realVisit)) {
+    if (predLocal !== realLocal || predVisit !== realVisit) {
+      return "incorrect";
+    }
+  }
+
+  return base;
+}
+
 const FASE_LABELS: Record<string, string> = {
   dieciseisavos: "Dieciseisavos de Final",
   octavos: "Octavos de Final",
@@ -509,7 +533,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
                   match={match}
                   prediction={pred}
                   real={real}
-                  status={getResultStatus(pred, real)}
+                  status={getMatchStatus(match, quiniela, pred, real)}
                   quiniela={quiniela}
                   points={getPointsForMatch(match, quiniela, resultados, puntajeConfig)}
                   teamColors={getTeamColors(match, quiniela, partidos)}
