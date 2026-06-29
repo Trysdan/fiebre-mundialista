@@ -221,6 +221,13 @@ function getTeamColors(match: any, quiniela: any, partidos: any[]) {
   };
 }
 
+const PLACEHOLDER = "———";
+
+function safeName(name: string | undefined | null) {
+  const v = (name || "").trim();
+  return v && v !== "nan" ? v : PLACEHOLDER;
+}
+
 function TeamBadge({ name, color }: { name: string; color: string | null }) {
   return (
     <span className={`font-semibold text-sm truncate flex items-center gap-1.5 ${color ? "px-2 py-0.5 rounded-lg border-2" : ""} ${
@@ -232,7 +239,7 @@ function TeamBadge({ name, color }: { name: string; color: string | null }) {
         ? "border-red-400 bg-red-50 text-red-700"
         : ""
     }`}>
-      {name}
+      {safeName(name)}
     </span>
   );
 }
@@ -283,7 +290,7 @@ function MatchCard({ match, prediction, real, status, quiniela, points, teamColo
             </div>
           ) : (
             <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
-              {equipos.local}
+              <span className={equipos.local?.trim() && equipos.local !== "nan" ? "" : "text-gray-300"}>{safeName(equipos.local)}</span>
               {predWinner === equipos.local && (
                 <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
                   GANADOR
@@ -317,7 +324,7 @@ function MatchCard({ match, prediction, real, status, quiniela, points, teamColo
             </div>
           ) : (
             <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
-              {equipos.visitante}
+              <span className={equipos.visitante?.trim() && equipos.visitante !== "nan" ? "" : "text-gray-300"}>{safeName(equipos.visitante)}</span>
               {predWinner === equipos.visitante && (
                 <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
                   GANADOR
