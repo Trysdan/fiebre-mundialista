@@ -160,6 +160,22 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
       const pts = disabled ? 0 : evaluarPartidoEliminatoria(partido.pronostico, resultado, puntajeBase, matchData, partido);
       totalPuntos += pts;
       detalle.push({ partido_id: id, pts, fase: faseKey });
+
+      if (!disabled && matchData && partido) {
+        const rC = (matchData.casa || "").trim().toLowerCase();
+        const rF = (matchData.fuera || "").trim().toLowerCase();
+        if (rC && rF && !esNombreGenerico(rC) && !esNombreGenerico(rF)) {
+          const pC = (partido.casa || "").trim().toLowerCase();
+          const pF = (partido.fuera || "").trim().toLowerCase();
+          if (pC === rC && pF === rF) {
+            const bonus = (config.clasificado || CONFIG_DEFAULT.clasificado)[faseKey] || 0;
+            if (bonus > 0) {
+              totalPuntos += bonus;
+              detalle.push({ fase: `llave_${faseKey}`, pts: bonus, partido_id: id });
+            }
+          }
+        }
+      }
     }
   }
 
