@@ -44,6 +44,8 @@ function computePhaseTotals(quiniela: any, resultados: Record<string, any>, punt
       phase = "Cuadro";
     } else if (d.fase.startsWith("clasificado_")) {
       phase = PHASE_DISPLAY[d.fase.replace("clasificado_", "")] || d.fase;
+    } else if (d.fase.startsWith("llave_")) {
+      phase = PHASE_DISPLAY[d.fase.replace("llave_", "")] || d.fase;
     } else {
       phase = PHASE_DISPLAY[d.fase] || d.fase;
     }
