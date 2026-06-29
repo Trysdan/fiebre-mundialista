@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, XCircle, MapPin } from "lucide-react";
+import { CheckCircle2, XCircle, MapPin, Plus } from "lucide-react";
 import { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico } from "@/utils/calcularPuntos";
 
 interface FixtureProps {
@@ -54,6 +54,24 @@ function getResultStatus(pronostico: any, resultado: any) {
   return "incorrect";
 }
 
+const FASE_LABELS: Record<string, string> = {
+  dieciseisavos: "Dieciseisavos de Final",
+  octavos: "Octavos de Final",
+  cuartos: "Cuartos de Final",
+  semifinal: "Semifinal",
+  tercer_puesto: "Tercer Lugar",
+  final: "Gran Final",
+};
+
+const LABEL_TO_KEY: Record<string, string> = {};
+for (const [k, v] of Object.entries(FASE_LABELS)) {
+  LABEL_TO_KEY[v] = k;
+}
+
+function getFaseKeyFromLabel(label: string): string | null {
+  return LABEL_TO_KEY[label] || null;
+}
+
 function getQuinielaTeams(match: any, quiniela: any) {
   if (!quiniela?.fase_final) return null;
   for (const [, partidos] of Object.entries(quiniela.fase_final)) {
@@ -100,6 +118,58 @@ function getAllPhaseTeams(fase: string, partidos: any[]) {
     });
 }
 
+function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<string, any>, puntajeConfig: any, partidos: any[]) {
+  const faseKey = getFaseKeyFromLabel(match.fase);
+  if (!faseKey) return null;
+
+  const config = puntajeConfig || {};
+  const clasifConfig = config.clasificado || {};
+  const ptsPorAcierto = clasifConfig[faseKey] || 0;
+
+  const qTeams = getQuinielaTeams(match, quiniela);
+  if (!qTeams) return null;
+
+  const predLocal = qTeams.local.trim().toLowerCase();
+  const predVisit = qTeams.visitante.trim().toLowerCase();
+
+  // 1. Match result points
+  const pred = getPredictionForMatch(quiniela, match.partido_id);
+  const real = resultados[match.partido_id];
+  const partido = (pred && real) ? evaluarPartidoEliminatoria(pred, real, config.grupos || config, match, { juego_id: match.partido_id, casa: qTeams.local, fuera: qTeams.visitante }) : 0;
+
+  // 2. Clasificado - per team in this phase
+  const realTeams = new Set(
+    (partidos || [])
+      .filter((m: any) => m.fase === match.fase)
+      .flatMap((m: any) => {
+        const c = (m.casa || m.equipos?.local || "").trim().toLowerCase();
+        const f = (m.fuera || m.equipos?.visitante || "").trim().toLowerCase();
+        return [c, f].filter((t) => t && t !== "nan");
+      })
+  );
+
+  let clasificado = 0;
+  const aciertos: string[] = [];
+  for (const eq of [predLocal, predVisit]) {
+    if (eq && eq !== "nan" && !esNombreGenerico(eq) && realTeams.has(eq)) {
+      clasificado += ptsPorAcierto;
+      aciertos.push(eq);
+    }
+  }
+
+  // 3. Llave completa
+  let llave = 0;
+  const rLocal = (match.casa || match.equipos?.local || "").trim().toLowerCase();
+  const rVisit = (match.fuera || match.equipos?.visitante || "").trim().toLowerCase();
+  if (rLocal && rVisit && !esNombreGenerico(rLocal) && !esNombreGenerico(rVisit)) {
+    if (predLocal === rLocal && predVisit === rVisit) {
+      llave = ptsPorAcierto;
+    }
+  }
+
+  return { partido, clasificado, llave, total: partido + clasificado + llave };
+}
+
 function getTeamColors(match: any, quiniela: any, partidos: any[]) {
   const quinielaTeams = getQuinielaTeams(match, quiniela);
   if (!quinielaTeams) return { local: null, visitante: null };
@@ -142,7 +212,7 @@ function TeamBadge({ name, color }: { name: string; color: string | null }) {
   );
 }
 
-function MatchCard({ match, prediction, real, status, quiniela, points, teamColors }: any) {
+function MatchCard({ match, prediction, real, status, quiniela, points, teamColors, breakdown }: any) {
   const quinielaTeams = getQuinielaTeams(match, quiniela);
   const equipos = quinielaTeams || parseEquipos(match);
   const isKnockout = !match.fase?.startsWith("Fase de Grupos");
@@ -266,6 +336,34 @@ function MatchCard({ match, prediction, real, status, quiniela, points, teamColo
               {points > 0 ? `+${points}` : `+0`}
             </span>
           )}
+        </div>
+      )}
+      {breakdown && (
+        <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="text-gray-500">Partido</span>
+            <span className={`font-bold ${breakdown.partido > 0 ? "text-blue-600" : "text-gray-300"}`}>
+              {breakdown.partido > 0 ? `+${breakdown.partido}` : "+0"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="text-gray-500">Clasificado</span>
+            <span className={`font-bold ${breakdown.clasificado > 0 ? "text-emerald-600" : "text-gray-300"}`}>
+              {breakdown.clasificado > 0 ? `+${breakdown.clasificado}` : "+0"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-[11px]">
+            <span className="text-gray-500">Llave</span>
+            <span className={`font-bold ${breakdown.llave > 0 ? "text-amber-600" : "text-gray-300"}`}>
+              {breakdown.llave > 0 ? `+${breakdown.llave}` : "+0"}
+            </span>
+          </div>
+          <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-1 mt-1">
+            <span className="font-bold text-gray-600">Total</span>
+            <span className={`font-black ${breakdown.total > 0 ? "text-blue-700" : "text-gray-300"}`}>
+              {breakdown.total > 0 ? `+${breakdown.total}` : "+0"}
+            </span>
+          </div>
         </div>
       )}
     </div>
@@ -404,6 +502,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
               {matchesInFase.map((match: any) => {
                 const pred = getPredictionForMatch(quiniela, match.partido_id);
                 const real = resultados[match.partido_id];
+                const breakdown = getKnockoutBreakdown(match, quiniela, resultados, puntajeConfig, partidos);
                 return (
                 <MatchCard
                   key={match.partido_id}
@@ -414,6 +513,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
                   quiniela={quiniela}
                   points={getPointsForMatch(match, quiniela, resultados, puntajeConfig)}
                   teamColors={getTeamColors(match, quiniela, partidos)}
+                  breakdown={breakdown}
                 />);
               })}
             </div>
