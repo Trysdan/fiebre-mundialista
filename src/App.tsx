@@ -227,8 +227,6 @@ export default function App() {
     return [...new Set(partidos.map((m) => m.fecha))].sort();
   }, [partidos]);
 
-  const currentDateIndex = allDates.indexOf(viewDate);
-
   const matchesForDate = useMemo(() => {
     if (!viewDate) return [];
     return partidos
@@ -243,12 +241,17 @@ export default function App() {
     return `${hour12}:${String(m).padStart(2, "0")} ${period}`;
   };
 
+  const hasPrevDate = allDates.some((d) => d < viewDate);
+  const hasNextDate = allDates.some((d) => d > viewDate);
+
   const goPrevDate = () => {
-    if (currentDateIndex > 0) setViewDate(allDates[currentDateIndex - 1]);
+    const prev = allDates.filter((d) => d < viewDate);
+    if (prev.length > 0) setViewDate(prev[prev.length - 1]);
   };
 
   const goNextDate = () => {
-    if (currentDateIndex < allDates.length - 1) setViewDate(allDates[currentDateIndex + 1]);
+    const next = allDates.filter((d) => d > viewDate);
+    if (next.length > 0) setViewDate(next[0]);
   };
 
   const goToday = () => setViewDate(SIMULATED_TODAY);
@@ -388,7 +391,7 @@ export default function App() {
                         </h3>
                       </div>
                       <div className="flex items-center gap-1">
-                        <button onClick={goPrevDate} disabled={currentDateIndex <= 0}
+                        <button onClick={goPrevDate} disabled={!hasPrevDate}
                           className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                           <ChevronLeft className="w-5 h-5 text-gray-600" />
                         </button>
@@ -398,7 +401,7 @@ export default function App() {
                           }`}>
                           Hoy
                         </button>
-                        <button onClick={goNextDate} disabled={currentDateIndex < 0 || currentDateIndex >= allDates.length - 1}
+                        <button onClick={goNextDate} disabled={!hasNextDate}
                           className="p-1.5 rounded-lg hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                           <ChevronRight className="w-5 h-5 text-gray-600" />
                         </button>
