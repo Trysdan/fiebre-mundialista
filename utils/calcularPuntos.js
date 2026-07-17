@@ -60,7 +60,7 @@ function evaluarPartidoEliminatoria(pronostico, resultadoReal, config, matchData
   if (matchData && quinielaPartido) {
     const actualCasa = (matchData.casa || "").trim().toLowerCase();
     const actualFuera = (matchData.fuera || "").trim().toLowerCase();
-    if (!esNombreGenerico(actualCasa)) {
+    if (!esNombreGenerico(actualCasa) && !esNombreGenerico(actualFuera)) {
       const predCasa = (quinielaPartido.casa || "").trim().toLowerCase();
       const predFuera = (quinielaPartido.fuera || "").trim().toLowerCase();
       if (predCasa !== actualCasa || predFuera !== actualFuera) {

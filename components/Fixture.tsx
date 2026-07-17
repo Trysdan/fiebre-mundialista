@@ -101,8 +101,8 @@ function getQuinielaTeams(match: any, quiniela: any) {
   if (!quiniela?.fase_final) return null;
   for (const [, partidos] of Object.entries(quiniela.fase_final)) {
     for (const p of (partidos as any[]) || []) {
-      if (String(p.juego_id) === String(match.partido_id) && p.casa && p.fuera) {
-        return { local: p.casa, visitante: p.fuera };
+      if (String(p.juego_id) === String(match.partido_id)) {
+        return { local: p.casa || "", visitante: p.fuera || "" };
       }
     }
   }
@@ -152,15 +152,14 @@ function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<stri
   const ptsPorAcierto = clasifConfig[faseKey] || 0;
 
   const qTeams = getQuinielaTeams(match, quiniela);
-  if (!qTeams) return null;
 
-  const predLocal = qTeams.local.trim().toLowerCase();
-  const predVisit = qTeams.visitante.trim().toLowerCase();
+  const predLocal = (qTeams?.local || "").trim().toLowerCase();
+  const predVisit = (qTeams?.visitante || "").trim().toLowerCase();
 
   // 1. Match result points
   const pred = getPredictionForMatch(quiniela, match.partido_id);
   const real = resultados[match.partido_id];
-  const partido = (pred && real) ? evaluarPartidoEliminatoria(pred, real, config.grupos || config, match, { juego_id: match.partido_id, casa: qTeams.local, fuera: qTeams.visitante }) : 0;
+  const partido = (pred && real) ? evaluarPartidoEliminatoria(pred, real, config.grupos || config, match, { juego_id: match.partido_id, casa: qTeams?.local || "", fuera: qTeams?.visitante || "" }) : 0;
 
   // 2. Clasificado - per team in this phase
   const realTeams = new Set(
@@ -174,11 +173,9 @@ function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<stri
   );
 
   let clasificado = 0;
-  const aciertos: string[] = [];
   for (const eq of [predLocal, predVisit]) {
     if (eq && eq !== "nan" && !esNombreGenerico(eq) && realTeams.has(eq)) {
       clasificado += ptsPorAcierto;
-      aciertos.push(eq);
     }
   }
 
@@ -186,7 +183,7 @@ function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<stri
   let llave = 0;
   const rLocal = (match.casa || match.equipos?.local || "").trim().toLowerCase();
   const rVisit = (match.fuera || match.equipos?.visitante || "").trim().toLowerCase();
-  if (rLocal && rVisit && !esNombreGenerico(rLocal) && !esNombreGenerico(rVisit)) {
+  if (rLocal && rVisit && !esNombreGenerico(rLocal) && !esNombreGenerico(rVisit) && predLocal && predVisit) {
     if (predLocal === rLocal && predVisit === rVisit) {
       llave = ptsPorAcierto;
     }
@@ -196,43 +193,57 @@ function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<stri
 }
 
 function getTeamColors(match: any, quiniela: any, partidos: any[]) {
-  const quinielaTeams = getQuinielaTeams(match, quiniela);
-  if (!quinielaTeams) return { local: null, visitante: null };
+  const qTeams = getQuinielaTeams(match, quiniela);
 
   const realLocal = (match.casa || match.equipos?.local || "").trim();
   const realVisitante = (match.fuera || match.equipos?.visitante || "").trim();
 
-  const predLocal = (quinielaTeams.local || "").trim();
-  const predVisitante = (quinielaTeams.visitante || "").trim();
+  const predLocal = (qTeams?.local || "").trim();
+  const predVisitante = (qTeams?.visitante || "").trim();
 
   const phaseTeams = getAllPhaseTeams(match.fase, partidos);
 
   const status = (pred: string, samePos: string, allTeams: string[]) => {
     const p = pred.toLowerCase();
-    if (!p || esNombreGenerico(p)) return null;
+    if (!p || p === "nan" || esNombreGenerico(p)) return "red";
     if (!esNombreGenerico(samePos) && p === samePos.toLowerCase()) return "green";
     if (allTeams.some((t) => t.toLowerCase() === p)) return "yellow";
     return "red";
   };
 
+  const getPred = (side: "local" | "visitante") => {
+    const pred = side === "local" ? predLocal : predVisitante;
+    const real = side === "local" ? realLocal : realVisitante;
+    return pred ? status(pred, real, phaseTeams) : null;
+  };
+
   return {
-    local: status(predLocal, realLocal, phaseTeams),
-    visitante: status(predVisitante, realVisitante, phaseTeams),
+    local: getPred("local"),
+    visitante: getPred("visitante"),
   };
 }
 
+const PLACEHOLDER = "———";
+
+function safeName(name: string | undefined | null) {
+  const v = (name || "").trim();
+  return v && v !== "nan" ? v : PLACEHOLDER;
+}
+
 function TeamBadge({ name, color }: { name: string; color: string | null }) {
+  const isEmpty = !(name || "").trim() || name === "nan";
+  const finalColor = isEmpty ? "red" : color;
   return (
-    <span className={`font-semibold text-sm truncate flex items-center gap-1.5 ${color ? "px-2 py-0.5 rounded-lg border-2" : ""} ${
-      color === "green"
+    <span className={`font-semibold text-sm truncate flex items-center gap-1.5 ${finalColor ? "px-2 py-0.5 rounded-lg border-2" : ""} ${
+      finalColor === "green"
         ? "border-green-500 bg-green-50 text-green-800"
-        : color === "yellow"
+        : finalColor === "yellow"
         ? "border-amber-400 bg-amber-50 text-amber-700"
-        : color === "red"
+        : finalColor === "red"
         ? "border-red-400 bg-red-50 text-red-700"
         : ""
     }`}>
-      {name}
+      {safeName(name)}
     </span>
   );
 }
@@ -283,7 +294,7 @@ function MatchCard({ match, prediction, real, status, quiniela, points, teamColo
             </div>
           ) : (
             <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
-              {equipos.local}
+              <span className={equipos.local?.trim() && equipos.local !== "nan" ? "" : "text-red-500 font-bold"}>{safeName(equipos.local)}</span>
               {predWinner === equipos.local && (
                 <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
                   GANADOR
@@ -317,7 +328,7 @@ function MatchCard({ match, prediction, real, status, quiniela, points, teamColo
             </div>
           ) : (
             <span className="font-semibold text-sm truncate pr-2 flex items-center gap-1">
-              {equipos.visitante}
+              <span className={equipos.visitante?.trim() && equipos.visitante !== "nan" ? "" : "text-red-500 font-bold"}>{safeName(equipos.visitante)}</span>
               {predWinner === equipos.visitante && (
                 <span className="text-[9px] font-black text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-full border border-amber-200 leading-none">
                   GANADOR
@@ -363,30 +374,30 @@ function MatchCard({ match, prediction, real, status, quiniela, points, teamColo
           )}
         </div>
       )}
-      {breakdown && (
+      {isKnockout && (
         <div className="mt-3 pt-3 border-t border-gray-100 space-y-1">
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-gray-500">Partido</span>
-            <span className={`font-bold ${breakdown.partido > 0 ? "text-blue-600" : "text-gray-300"}`}>
-              {breakdown.partido > 0 ? `+${breakdown.partido}` : "+0"}
+            <span className={`font-bold ${(breakdown?.partido ?? 0) > 0 ? "text-blue-600" : "text-gray-300"}`}>
+              {(breakdown?.partido ?? 0) > 0 ? `+${breakdown!.partido}` : "+0"}
             </span>
           </div>
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-gray-500">Clasificado</span>
-            <span className={`font-bold ${breakdown.clasificado > 0 ? "text-emerald-600" : "text-gray-300"}`}>
-              {breakdown.clasificado > 0 ? `+${breakdown.clasificado}` : "+0"}
+            <span className={`font-bold ${(breakdown?.clasificado ?? 0) > 0 ? "text-emerald-600" : "text-gray-300"}`}>
+              {(breakdown?.clasificado ?? 0) > 0 ? `+${breakdown!.clasificado}` : "+0"}
             </span>
           </div>
           <div className="flex items-center justify-between text-[11px]">
             <span className="text-gray-500">Llave</span>
-            <span className={`font-bold ${breakdown.llave > 0 ? "text-amber-600" : "text-gray-300"}`}>
-              {breakdown.llave > 0 ? `+${breakdown.llave}` : "+0"}
+            <span className={`font-bold ${(breakdown?.llave ?? 0) > 0 ? "text-amber-600" : "text-gray-300"}`}>
+              {(breakdown?.llave ?? 0) > 0 ? `+${breakdown!.llave}` : "+0"}
             </span>
           </div>
           <div className="flex items-center justify-between text-xs border-t border-gray-100 pt-1 mt-1">
             <span className="font-bold text-gray-600">Total</span>
-            <span className={`font-black ${breakdown.total > 0 ? "text-blue-700" : "text-gray-300"}`}>
-              {breakdown.total > 0 ? `+${breakdown.total}` : "+0"}
+            <span className={`font-black ${(breakdown?.total ?? 0) > 0 ? "text-blue-700" : "text-gray-300"}`}>
+              {(breakdown?.total ?? 0) > 0 ? `+${breakdown!.total}` : "+0"}
             </span>
           </div>
         </div>
