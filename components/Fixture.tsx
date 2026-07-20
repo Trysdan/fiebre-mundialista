@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2, XCircle, MapPin, Plus, ChevronDown } from "lucide-react";
-import { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico } from "@/utils/calcularPuntos";
+import { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico, normalizeStr } from "@/utils/calcularPuntos";
 
 interface FixtureProps {
   partidos: any[];
@@ -48,7 +48,7 @@ function getResultStatus(pronostico: any, resultado: any) {
     const predWinner = pronostico.marca_ganador_casa || pronostico.marca_ganador_fuera || "";
     const realWinner = resultado.ganador_penales || "";
     if (predWinner && realWinner) {
-      return predWinner.toLowerCase() === realWinner.toLowerCase() ? "correct" : "incorrect";
+      return normalizeStr(predWinner) === normalizeStr(realWinner) ? "correct" : "incorrect";
     }
   }
   if (gPron === gReal) return "partial";
@@ -65,10 +65,10 @@ function getMatchStatus(match: any, quiniela: any, pred: any, real: any) {
   const qTeams = getQuinielaTeams(match, quiniela);
   if (!qTeams) return base;
 
-  const realLocal = (match.casa || match.equipos?.local || "").trim().toLowerCase();
-  const realVisit = (match.fuera || match.equipos?.visitante || "").trim().toLowerCase();
-  const predLocal = qTeams.local.trim().toLowerCase();
-  const predVisit = qTeams.visitante.trim().toLowerCase();
+  const realLocal = normalizeStr(match.casa || match.equipos?.local);
+  const realVisit = normalizeStr(match.fuera || match.equipos?.visitante);
+  const predLocal = normalizeStr(qTeams.local);
+  const predVisit = normalizeStr(qTeams.visitante);
 
   if (realLocal && realVisit && !esNombreGenerico(realLocal) && !esNombreGenerico(realVisit)) {
     if (predLocal !== realLocal || predVisit !== realVisit) {
@@ -153,8 +153,8 @@ function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<stri
 
   const qTeams = getQuinielaTeams(match, quiniela);
 
-  const predLocal = (qTeams?.local || "").trim().toLowerCase();
-  const predVisit = (qTeams?.visitante || "").trim().toLowerCase();
+  const predLocal = normalizeStr(qTeams?.local);
+  const predVisit = normalizeStr(qTeams?.visitante);
 
   // 1. Match result points
   const pred = getPredictionForMatch(quiniela, match.partido_id);
@@ -166,8 +166,8 @@ function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<stri
     (partidos || [])
       .filter((m: any) => m.fase === match.fase)
       .flatMap((m: any) => {
-        const c = (m.casa || m.equipos?.local || "").trim().toLowerCase();
-        const f = (m.fuera || m.equipos?.visitante || "").trim().toLowerCase();
+        const c = normalizeStr(m.casa || m.equipos?.local);
+        const f = normalizeStr(m.fuera || m.equipos?.visitante);
         return [c, f].filter((t) => t && t !== "nan");
       })
   );
@@ -181,8 +181,8 @@ function getKnockoutBreakdown(match: any, quiniela: any, resultados: Record<stri
 
   // 3. Llave completa
   let llave = 0;
-  const rLocal = (match.casa || match.equipos?.local || "").trim().toLowerCase();
-  const rVisit = (match.fuera || match.equipos?.visitante || "").trim().toLowerCase();
+  const rLocal = normalizeStr(match.casa || match.equipos?.local);
+  const rVisit = normalizeStr(match.fuera || match.equipos?.visitante);
   if (rLocal && rVisit && !esNombreGenerico(rLocal) && !esNombreGenerico(rVisit) && predLocal && predVisit) {
     if (predLocal === rLocal && predVisit === rVisit) {
       llave = ptsPorAcierto;
@@ -204,10 +204,11 @@ function getTeamColors(match: any, quiniela: any, partidos: any[]) {
   const phaseTeams = getAllPhaseTeams(match.fase, partidos);
 
   const status = (pred: string, samePos: string, allTeams: string[]) => {
-    const p = pred.toLowerCase();
+    const p = normalizeStr(pred);
     if (!p || p === "nan" || esNombreGenerico(p)) return "red";
-    if (!esNombreGenerico(samePos) && p === samePos.toLowerCase()) return "green";
-    if (allTeams.some((t) => t.toLowerCase() === p)) return "yellow";
+    const s = normalizeStr(samePos);
+    if (!esNombreGenerico(s) && p === s) return "green";
+    if (allTeams.some((t) => normalizeStr(t) === p)) return "yellow";
     return "red";
   };
 
@@ -457,8 +458,8 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
   const fmt = (v: any) => (v && v !== "nan" ? v : "—");
 
   const getCHStatus = (campo: string) => {
-    const pred = (ch[campo] || "").trim().toLowerCase();
-    const real = (realCH[campo] || "").trim().toLowerCase();
+    const pred = normalizeStr(ch[campo]);
+    const real = normalizeStr(realCH[campo]);
     if (!real || real === "nan") return { status: null as string | null, pts: 0 };
     const correcto = pred && pred !== "nan" && pred === real;
     return { status: correcto ? "correct" : "incorrect", pts: correcto ? (chConfig[campo] || 0) : 0 };

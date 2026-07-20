@@ -18,6 +18,7 @@ import Leaderboard from "@/components/Leaderboard";
 import Fixture from "@/components/Fixture";
 import AdminPanel from "@/components/AdminPanel";
 import { getTeamFlag } from "@/lib/flags";
+import { normalizeStr } from "@/utils/calcularPuntos";
 
 type Panel = "INICIO" | "PARTICIPANTE" | "ADMINISTRADOR";
 
@@ -80,7 +81,7 @@ export default function App() {
     e.preventDefault();
     const found = quinielas.find(
       (q) =>
-        q.participante?.toLowerCase() === searchCedula.toLowerCase() ||
+        normalizeStr(q.participante) === normalizeStr(searchCedula) ||
         searchCedula === "123"
     );
     if (found || searchCedula === "123") {

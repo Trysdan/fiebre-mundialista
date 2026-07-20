@@ -153,11 +153,14 @@ const COUNTRY_CODES: Record<string, string> = {
 
 const FLAG_BASE = "https://flagcdn.com/20x15/";
 
+import { normalizeStr } from "@/utils/calcularPuntos";
+
 export function getTeamFlag(name: string): string {
   const clean = name?.trim() || "";
   if (COUNTRY_CODES[clean]) return FLAG_BASE + COUNTRY_CODES[clean] + ".png";
+  const normalName = normalizeStr(clean);
   for (const [key, code] of Object.entries(COUNTRY_CODES)) {
-    if (clean.toLowerCase().includes(key.toLowerCase())) return FLAG_BASE + code + ".png";
+    if (normalName.includes(normalizeStr(key))) return FLAG_BASE + code + ".png";
   }
   return "";
 }
