@@ -49,20 +49,28 @@ function evaluarPartidoGrupo(pronostico, resultadoReal, config) {
   return 0;
 }
 
-function esNombreGenerico(nombre) {
-  if (!nombre) return true;
-  return /°\s*Grupo|Ganador\s+\d+|^\d+°/.test(nombre);
+function normalizeStr(str) {
+  return (str || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 }
 
-export { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico };
+function esNombreGenerico(nombre) {
+  if (!nombre) return true;
+  return /°\s*grupo|ganador\s+\d+|^\d+°/.test(nombre);
+}
+
+export { evaluarPartidoGrupo, evaluarPartidoEliminatoria, esNombreGenerico, normalizeStr };
 
 function evaluarPartidoEliminatoria(pronostico, resultadoReal, config, matchData, quinielaPartido) {
   if (matchData && quinielaPartido) {
-    const actualCasa = (matchData.casa || "").trim().toLowerCase();
-    const actualFuera = (matchData.fuera || "").trim().toLowerCase();
+    const actualCasa = normalizeStr(matchData.casa);
+    const actualFuera = normalizeStr(matchData.fuera);
     if (!esNombreGenerico(actualCasa) && !esNombreGenerico(actualFuera)) {
-      const predCasa = (quinielaPartido.casa || "").trim().toLowerCase();
-      const predFuera = (quinielaPartido.fuera || "").trim().toLowerCase();
+      const predCasa = normalizeStr(quinielaPartido.casa);
+      const predFuera = normalizeStr(quinielaPartido.fuera);
       if (predCasa !== actualCasa || predFuera !== actualFuera) {
         return 0;
       }
@@ -84,7 +92,7 @@ function evaluarPartidoEliminatoria(pronostico, resultadoReal, config, matchData
   if (huboEmpateEnReal && huboEmpateEnPron) {
     const marcaPron = marca_ganador_casa || marca_ganador_fuera || "";
     const marcaReal = resultadoReal.ganador_penales || "";
-    if (marcaPron && marcaReal && marcaPron.toLowerCase() === marcaReal.toLowerCase()) {
+    if (marcaPron && marcaReal && normalizeStr(marcaPron) === normalizeStr(marcaReal)) {
       return config.exacto;
     }
     if (marcaPron === "" && marcaReal === "") {
@@ -117,7 +125,7 @@ function evaluarCuadroDeHonor(quiniela, resultadosReales, config) {
     const valorReal = correctos[field];
     if (!valorReal || valorReal === "nan") continue;
     const valorPred = prediccion[field];
-    const acierto = valorPred && valorPred !== "nan" && valorPred.toLowerCase().trim() === valorReal.toLowerCase().trim();
+    const acierto = valorPred && valorPred !== "nan" && normalizeStr(valorPred) === normalizeStr(valorReal);
     const puntos = acierto ? (chConfig[field] || 0) : 0;
     pts += puntos;
     detalle.push({ fase: "cuadro_de_honor", campo: field, pts: puntos });
@@ -164,11 +172,11 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
       }
 
       if (!disabled && matchData && partido && partido.casa && partido.fuera) {
-        const rC = (matchData.casa || "").trim().toLowerCase();
-        const rF = (matchData.fuera || "").trim().toLowerCase();
+        const rC = normalizeStr(matchData.casa);
+        const rF = normalizeStr(matchData.fuera);
         if (rC && rF && !esNombreGenerico(rC) && !esNombreGenerico(rF)) {
-          const pC = (partido.casa || "").trim().toLowerCase();
-          const pF = (partido.fuera || "").trim().toLowerCase();
+          const pC = normalizeStr(partido.casa);
+          const pF = normalizeStr(partido.fuera);
           if (pC && pF && pC === rC && pF === rF) {
             const bonus = (config.clasificado || CONFIG_DEFAULT.clasificado)[faseKey] || 0;
             if (bonus > 0) {
@@ -191,8 +199,8 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
     const predPartidos = (quiniela.fase_final || {})[faseKey] || [];
     const predEquipos = new Set();
     for (const p of predPartidos) {
-      const c = (p.casa || "").trim().toLowerCase();
-      const f = (p.fuera || "").trim().toLowerCase();
+      const c = normalizeStr(p.casa);
+      const f = normalizeStr(p.fuera);
       if (c && c !== "nan") predEquipos.add(c);
       if (f && f !== "nan") predEquipos.add(f);
     }
@@ -200,8 +208,8 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
     const realPartidos = (partidos || []).filter((m) => m.fase === faseLabel);
     const realEquipos = new Set();
     for (const m of realPartidos) {
-      const c = (m.casa || m.equipos?.local || "").trim().toLowerCase();
-      const f = (m.fuera || m.equipos?.visitante || "").trim().toLowerCase();
+      const c = normalizeStr(m.casa || m.equipos?.local);
+      const f = normalizeStr(m.fuera || m.equipos?.visitante);
       if (c && c !== "nan") realEquipos.add(c);
       if (f && f !== "nan") realEquipos.add(f);
     }
