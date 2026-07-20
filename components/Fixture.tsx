@@ -451,8 +451,40 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
   const jornadaLabels: Record<string, string> = { J1: "Jornada 1", J2: "Jornada 2", J3: "Jornada 3" };
 
   const ch = quiniela.cuadro_de_honor || {};
+  const realCH = ((resultados as any)?.cuadro_de_honor || {}) as Record<string, string>;
+  const chConfig = ((puntajeConfig as any)?.cuadro_de_honor || {}) as Record<string, number>;
 
   const fmt = (v: any) => (v && v !== "nan" ? v : "—");
+
+  const getCHStatus = (campo: string) => {
+    const pred = (ch[campo] || "").trim().toLowerCase();
+    const real = (realCH[campo] || "").trim().toLowerCase();
+    if (!real || real === "nan") return { status: null as string | null, pts: 0 };
+    const correcto = pred && pred !== "nan" && pred === real;
+    return { status: correcto ? "correct" : "incorrect", pts: correcto ? (chConfig[campo] || 0) : 0 };
+  };
+
+  const CH_FIELDS: { key: string; label: string }[] = [
+    { key: "campeon", label: "Campeón" },
+    { key: "subcampeon", label: "Subcampeón" },
+    { key: "tercer_puesto", label: "3.er Lugar" },
+    { key: "bota_oro", label: "Bota de Oro" },
+    { key: "bota_plata", label: "Bota de Plata" },
+    { key: "bota_bronce", label: "Bota de Bronce" },
+    { key: "balon_oro", label: "Balón de Oro" },
+    { key: "balon_plata", label: "Balón de Plata" },
+    { key: "balon_bronce", label: "Balón de Bronce" },
+  ];
+
+  const chTotalPts = CH_FIELDS.reduce((s, f) => s + getCHStatus(f.key).pts, 0);
+
+  const chTopStyles = [
+    { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-900", label: "text-amber-600" },
+    { bg: "bg-gray-50", border: "border-gray-200", text: "text-gray-800", label: "text-gray-500" },
+    { bg: "bg-orange-50", border: "border-orange-200", text: "text-orange-900", label: "text-orange-600" },
+  ];
+
+  const chTopKeys = ["campeon", "subcampeon", "tercer_puesto"];
 
   return (
     <div className="space-y-10">
@@ -462,33 +494,85 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
         {collapsed["cuadro"] ? null : (
         <>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
-            <span className="text-[10px] font-bold text-amber-600 uppercase tracking-widest">Campeón</span>
-            <p className="text-lg font-black text-amber-900 mt-1">{fmt(ch.campeon)}</p>
-          </div>
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-center">
-            <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Subcampeón</span>
-            <p className="text-lg font-black text-gray-800 mt-1">{fmt(ch.subcampeon)}</p>
-          </div>
-          <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 text-center">
-            <span className="text-[10px] font-bold text-orange-600 uppercase tracking-widest">3.er Lugar</span>
-            <p className="text-lg font-black text-orange-900 mt-1">{fmt(ch.tercer_puesto)}</p>
-          </div>
+          {chTopKeys.map((key, i) => {
+            const info = getCHStatus(key);
+            const base = chTopStyles[i];
+            const border = info.status === "correct" ? "border-green-400" : info.status === "incorrect" ? "border-red-400" : base.border;
+            const bg = info.status === "correct" ? "bg-green-50" : info.status === "incorrect" ? "bg-red-50" : base.bg;
+            return (
+              <div key={key} className={`${bg} border ${border} rounded-xl p-4 text-center transition-colors`}>
+                <span className={`text-[10px] font-bold ${base.label} uppercase tracking-widest`}>{CH_FIELDS[i].label}</span>
+                <p className={`text-lg font-black ${base.text} mt-1`}>{fmt(ch[key])}</p>
+                {info.status && (
+                  <div className="flex items-center justify-center gap-1 mt-2">
+                    {info.status === "correct" ? (
+                      <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-red-500 shrink-0" />
+                    )}
+                    <span className="text-xs text-gray-500">Real: {fmt(realCH[key])}</span>
+                  </div>
+                )}
+                {info.status && (
+                  <div className="mt-1">
+                    <span className={`text-xs font-bold ${info.pts > 0 ? "text-blue-600" : "text-gray-300"}`}>
+                      {info.pts > 0 ? `+${info.pts} pts` : "+0 pts"}
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-          {[
-            { key: "bota_oro", label: "Bota de Oro" },
-            { key: "bota_plata", label: "Bota de Plata" },
-            { key: "bota_bronce", label: "Bota de Bronce" },
-            { key: "balon_oro", label: "Balón de Oro" },
-            { key: "balon_plata", label: "Balón de Plata" },
-            { key: "balon_bronce", label: "Balón de Bronce" },
-          ].map(({ key, label }) => (
-            <div key={key} className="bg-white border border-gray-100 rounded-xl p-3 text-center shadow-sm">
-              <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{label}</span>
-              <p className="text-sm font-bold text-gray-800 mt-1">{fmt(ch[key])}</p>
-            </div>
-          ))}
+          {CH_FIELDS.slice(3).map(({ key, label }) => {
+            const info = getCHStatus(key);
+            const border = info.status === "correct" ? "border-green-400" : info.status === "incorrect" ? "border-red-400" : "border-gray-100";
+            const bg = info.status === "correct" ? "bg-green-50" : info.status === "incorrect" ? "bg-red-50" : "bg-white";
+            return (
+              <div key={key} className={`${bg} border ${border} rounded-xl p-3 text-center shadow-sm transition-colors`}>
+                <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">{label}</span>
+                <p className="text-sm font-bold text-gray-800 mt-1">{fmt(ch[key])}</p>
+                {info.status && (
+                  <div className="flex items-center justify-center gap-1 mt-1.5">
+                    {info.status === "correct" ? (
+                      <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />
+                    ) : (
+                      <XCircle className="w-3 h-3 text-red-500 shrink-0" />
+                    )}
+                    <span className="text-[10px] text-gray-400 truncate">Real: {fmt(realCH[key])}</span>
+                  </div>
+                )}
+                {info.status && (
+                  <div className="mt-0.5">
+                    <span className={`text-[10px] font-bold ${info.pts > 0 ? "text-blue-600" : "text-gray-300"}`}>
+                      {info.pts > 0 ? `+${info.pts}` : "+0"}
+                    </span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        {/* CH breakdown */}
+        <div className="mt-4 pt-3 border-t border-gray-200 space-y-1">
+          {CH_FIELDS.map(({ key, label }) => {
+            const info = getCHStatus(key);
+            return (
+              <div key={key} className="flex items-center justify-between text-[11px]">
+                <span className="text-gray-500">{label}</span>
+                <span className={`font-bold ${info.pts > 0 ? "text-blue-600" : "text-gray-300"}`}>
+                  {info.pts > 0 ? `+${info.pts}` : "+0"}
+                </span>
+              </div>
+            );
+          })}
+          <div className="flex items-center justify-between text-xs border-t border-gray-200 pt-1 mt-1">
+            <span className="font-bold text-gray-600">Total CH</span>
+            <span className={`font-black ${chTotalPts > 0 ? "text-blue-700" : "text-gray-300"}`}>
+              {chTotalPts > 0 ? `+${chTotalPts}` : "+0"}
+            </span>
+          </div>
         </div>
         </>
         )}
