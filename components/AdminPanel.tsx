@@ -25,6 +25,7 @@ interface AdminPanelProps {
   adminCreds?: { usuario: string; password: string };
   quinielas?: any[];
   disabledPhases?: string[];
+  chManualPts?: Record<string, number>;
   onSaveResultados: (resultados: Record<string, any>) => Promise<void>;
   onSavePuntajeConfig: (config: any) => Promise<void>;
   onSavePartidos?: (partidos: Record<string, { casa: string; fuera: string }>) => Promise<void>;
@@ -32,6 +33,7 @@ interface AdminPanelProps {
   onSaveContacto?: (data: { email: string; telefonos: string[] }) => Promise<void>;
   onSaveAdminCreds?: (creds: { usuario: string; password: string }) => Promise<void>;
   onSaveDisabledPhases?: (phases: string[]) => Promise<void>;
+  onSaveCHManualPts?: (pts: Record<string, number>) => Promise<void>;
   onDeleteQuiniela?: (participante: string) => Promise<void>;
   onRefresh?: () => Promise<void>;
   isPreview?: boolean;
@@ -55,6 +57,7 @@ export default function AdminPanel({
   adminCreds: initialCreds,
   quinielas,
   disabledPhases: initialDisabledPhases = [],
+  chManualPts: initialCHManualPts = {},
   onSaveResultados,
   onSavePuntajeConfig,
   onSavePartidos,
@@ -62,6 +65,7 @@ export default function AdminPanel({
   onSaveContacto,
   onSaveAdminCreds,
   onSaveDisabledPhases,
+  onSaveCHManualPts,
   onDeleteQuiniela,
   onRefresh,
   isPreview,
@@ -89,6 +93,7 @@ export default function AdminPanel({
   const [resultadosOpen, setResultadosOpen] = useState(true);
   const [resultadosSections, setResultadosSections] = useState<Record<string, boolean>>({});
   const [localDisabledPhases, setLocalDisabledPhases] = useState<string[]>(initialDisabledPhases);
+  const [localCHManualPts, setLocalCHManualPts] = useState<Record<string, number>>(initialCHManualPts);
   const fileInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (isPreview) {
@@ -744,6 +749,40 @@ export default function AdminPanel({
             <button onClick={handleSaveConfig} className="mt-4 w-full bg-green-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md hover:bg-green-700 transition-colors text-sm">
               <Save className="w-4 h-4" />
               Guardar Configuración
+            </button>
+          </div>
+
+          {/* Puntaje Manual CH */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <h3 className="text-lg font-bold mb-1">Puntaje Manual CH</h3>
+            <p className="text-xs text-gray-400 mb-4">Si asignas un valor aquí, anula el cálculo automático del Cuadro de Honor para ese participante.</p>
+            <div className="space-y-2 max-h-80 overflow-y-auto">
+              {[...new Set((quinielas || []).map((q) => q.participante).filter(Boolean))].sort((a, b) => a.localeCompare(b, "es")).map((name) => (
+                <div key={name} className="flex items-center justify-between bg-gray-50 p-2 rounded-xl">
+                  <span className="text-sm font-semibold text-gray-700 truncate mr-2">{name}</span>
+                  <input type="number" className="w-20 h-8 text-center bg-white border border-gray-200 rounded-lg text-sm font-bold"
+                    value={name in localCHManualPts ? localCHManualPts[name] : ""}
+                    placeholder="Auto"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setLocalCHManualPts((prev) => {
+                        const next = { ...prev };
+                        if (val === "") {
+                          delete next[name];
+                        } else {
+                          next[name] = parseInt(val) || 0;
+                        }
+                        return next;
+                      });
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            <button onClick={() => onSaveCHManualPts?.(localCHManualPts)}
+              className="mt-4 w-full bg-blue-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 shadow-md hover:bg-blue-700 transition-colors text-sm">
+              <Save className="w-4 h-4" />
+              Guardar Puntaje Manual CH
             </button>
           </div>
 

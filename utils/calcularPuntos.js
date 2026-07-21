@@ -133,7 +133,7 @@ function evaluarCuadroDeHonor(quiniela, resultadosReales, config) {
   return { pts, detalle };
 }
 
-export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig, partidos, disabledPhases = []) {
+export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig, partidos, disabledPhases = [], chManualPts = {}) {
   const config = puntajeConfig || CONFIG_DEFAULT;
   const puntajeBase = config.grupos || CONFIG_DEFAULT.grupos;
   let totalPuntos = 0;
@@ -227,8 +227,15 @@ export default function calcularPuntos(quiniela, resultadosReales, puntajeConfig
   }
 
   const ch = evaluarCuadroDeHonor(quiniela, resultadosReales, config);
-  totalPuntos += ch.pts;
-  detalle.push(...ch.detalle);
+  const manualPts = chManualPts[quiniela.participante];
+  const chPts = manualPts != null ? manualPts : ch.pts;
+  if (manualPts != null) {
+    detalle.push({ fase: "cuadro_de_honor", campo: "__manual__", pts: chPts });
+  }
+  totalPuntos += chPts;
+  if (manualPts == null) {
+    detalle.push(...ch.detalle);
+  }
 
   return { total: totalPuntos, detalle };
 }

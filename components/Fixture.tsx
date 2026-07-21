@@ -9,6 +9,7 @@ interface FixtureProps {
   quiniela: any;
   resultados: Record<string, any>;
   puntajeConfig?: Record<string, { exacto: number; diferencia: number; ganador: number }>;
+  chManualPts?: Record<string, number>;
 }
 
 function parseEquipos(match: any) {
@@ -416,7 +417,7 @@ const KNOCKOUT_PHASES = [
   "Gran Final",
 ];
 
-export default function Fixture({ partidos, quiniela, resultados, puntajeConfig }: FixtureProps) {
+export default function Fixture({ partidos, quiniela, resultados, puntajeConfig, chManualPts }: FixtureProps) {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
   const toggle = (key: string) => setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -478,6 +479,7 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
   ];
 
   const chTotalPts = CH_FIELDS.reduce((s, f) => s + getCHStatus(f.key).pts, 0);
+  const chTotalPtsManual = chManualPts?.[quiniela.participante];
 
   const chTopStyles = [
     { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-900", label: "text-amber-600" },
@@ -569,9 +571,9 @@ export default function Fixture({ partidos, quiniela, resultados, puntajeConfig 
             );
           })}
           <div className="flex items-center justify-between text-xs border-t border-gray-200 pt-1 mt-1">
-            <span className="font-bold text-gray-600">Total CH</span>
-            <span className={`font-black ${chTotalPts > 0 ? "text-blue-700" : "text-gray-300"}`}>
-              {chTotalPts > 0 ? `+${chTotalPts}` : "+0"}
+            <span className="font-bold text-gray-600">Total CH{chTotalPtsManual != null ? " (manual)" : ""}</span>
+            <span className={`font-black ${(chTotalPtsManual ?? chTotalPts) > 0 ? "text-blue-700" : "text-gray-300"}`}>
+              {(chTotalPtsManual ?? chTotalPts) > 0 ? `+${chTotalPtsManual ?? chTotalPts}` : "+0"}
             </span>
           </div>
         </div>
