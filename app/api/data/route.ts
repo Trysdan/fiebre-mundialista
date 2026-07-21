@@ -17,6 +17,7 @@ export async function GET() {
       contacto: map.contacto || { email: "", telefonos: [] },
       adminCreds: map.admin_creds || { usuario: "admin", password: "admin" },
       disabledPhases: map.disabled_phases || [],
+      chManualPts: map.ch_manual_pts || {},
       quinielas,
     });
   } catch (error) {

@@ -62,6 +62,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: "Fases deshabilitadas actualizadas" });
     }
 
+    if (type === "ch_manual_pts") {
+      await upsertRow("ch_manual_pts", body.chManualPts);
+      return NextResponse.json({ success: true, message: "Puntos CH manuales guardados" });
+    }
+
     return NextResponse.json({ error: "Tipo de operación no válido" }, { status: 400 });
   } catch (error) {
     console.error("Error en admin:", error);

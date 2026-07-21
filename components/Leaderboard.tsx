@@ -10,6 +10,7 @@ interface LeaderboardProps {
   puntajeConfig?: Record<string, { exacto: number; diferencia: number; ganador: number }>;
   partidos?: any[];
   disabledPhases?: string[];
+  chManualPts?: Record<string, number>;
   onSelectQuiniela?: (nombre: string) => void;
 }
 
@@ -24,8 +25,8 @@ const PHASE_DISPLAY: Record<string, string> = {
   final: "Final",
 };
 
-function computePhaseTotals(quiniela: any, resultados: Record<string, any>, puntajeConfig: any, partidos?: any[], disabledPhases?: string[]) {
-  const { total, detalle } = calcularPuntos(quiniela, resultados, puntajeConfig, partidos, disabledPhases);
+function computePhaseTotals(quiniela: any, resultados: Record<string, any>, puntajeConfig: any, partidos?: any[], disabledPhases?: string[], chManualPts?: Record<string, number>) {
+  const { total, detalle } = calcularPuntos(quiniela, resultados, puntajeConfig, partidos, disabledPhases, chManualPts);
 
   const jorLookup: Record<string, string> = {};
   if (partidos) {
@@ -61,24 +62,24 @@ function computePhaseTotals(quiniela: any, resultados: Record<string, any>, punt
   return { total, phaseTotals };
 }
 
-export default function Leaderboard({ quinielas, resultados, puntajeConfig, partidos, disabledPhases, onSelectQuiniela }: LeaderboardProps) {
+export default function Leaderboard({ quinielas, resultados, puntajeConfig, partidos, disabledPhases, chManualPts, onSelectQuiniela }: LeaderboardProps) {
   const [sortKey, setSortKey] = useState("total");
   const [sortDir, setSortDir] = useState<"desc" | "asc">("desc");
 
   const allKeys = useMemo(() => {
     const keys = new Set<string>();
     for (const q of quinielas) {
-      const { phaseTotals } = computePhaseTotals(q, resultados, puntajeConfig, partidos, disabledPhases);
+      const { phaseTotals } = computePhaseTotals(q, resultados, puntajeConfig, partidos, disabledPhases, chManualPts);
       for (const k of Object.keys(phaseTotals)) keys.add(k);
     }
     return keys;
-  }, [quinielas, resultados, puntajeConfig, partidos, disabledPhases]);
+  }, [quinielas, resultados, puntajeConfig, partidos, disabledPhases, chManualPts]);
 
   const phaseKeys = PHASE_ORDER.filter((k) => allKeys.has(k));
 
   const entries = useMemo(() => {
     const raw = quinielas.map((q) => {
-      const { total, phaseTotals } = computePhaseTotals(q, resultados, puntajeConfig, partidos, disabledPhases);
+      const { total, phaseTotals } = computePhaseTotals(q, resultados, puntajeConfig, partidos, disabledPhases, chManualPts);
       return { nombre: q.participante || "Desconocido", puntos: total, phaseTotals };
     });
 
@@ -91,7 +92,7 @@ export default function Leaderboard({ quinielas, resultados, puntajeConfig, part
     });
 
     return raw;
-  }, [quinielas, resultados, puntajeConfig, partidos, disabledPhases, sortKey, sortDir]);
+  }, [quinielas, resultados, puntajeConfig, partidos, disabledPhases, chManualPts, sortKey, sortDir]);
 
   const positions = useMemo(() => {
     const getVal = (entry: typeof entries[0]) =>

@@ -48,6 +48,7 @@ export default function App() {
   });
   const [adminCreds, setAdminCreds] = useState({ usuario: "admin", password: "admin" });
   const [disabledPhases, setDisabledPhases] = useState<string[]>([]);
+  const [chManualPts, setChManualPts] = useState<Record<string, number>>({});
   const [isPreview, setIsPreview] = useState(false);
   const [viewDate, setViewDate] = useState("");
 
@@ -64,6 +65,7 @@ export default function App() {
       if (json.contacto) setContacto(json.contacto);
       if (json.adminCreds) setAdminCreds(json.adminCreds);
       if (json.disabledPhases) setDisabledPhases(json.disabledPhases);
+      if (json.chManualPts) setChManualPts(json.chManualPts);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -183,6 +185,19 @@ export default function App() {
       if (res.ok) setDisabledPhases(phases);
     } catch (err) {
       console.error("Error saving disabled phases:", err);
+    }
+  };
+
+  const handleSaveCHManualPts = async (pts: Record<string, number>) => {
+    try {
+      const res = await fetch("/api/admin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "ch_manual_pts", chManualPts: pts }),
+      });
+      if (res.ok) setChManualPts(pts);
+    } catch (err) {
+      console.error("Error saving CH manual pts:", err);
     }
   };
 
@@ -529,6 +544,7 @@ export default function App() {
                     puntajeConfig={puntajeConfig}
                     partidos={partidos}
                     disabledPhases={disabledPhases}
+                    chManualPts={chManualPts}
                     onSelectQuiniela={(nombre) => {
                       setActivePanel("PARTICIPANTE");
                       setSelectedUser(nombre);
@@ -583,6 +599,7 @@ export default function App() {
                   quiniela={selectedQuiniela}
                   resultados={resultados}
                   puntajeConfig={puntajeConfig}
+                  chManualPts={chManualPts}
                 />
                 </>
               ) : (
@@ -624,6 +641,7 @@ export default function App() {
                 adminCreds={adminCreds}
                 quinielas={quinielas}
                 disabledPhases={disabledPhases}
+                chManualPts={chManualPts}
                 onSaveResultados={handleSaveResultados}
                 onSavePuntajeConfig={handleSavePuntajeConfig}
                 onSavePartidos={handleSavePartidos}
@@ -631,6 +649,7 @@ export default function App() {
                 onSaveContacto={handleSaveContacto}
                 onSaveAdminCreds={handleSaveAdminCreds}
                 onSaveDisabledPhases={handleSaveDisabledPhases}
+                onSaveCHManualPts={handleSaveCHManualPts}
                 onDeleteQuiniela={handleDeleteQuiniela}
                 onRefresh={fetchData}
                 isPreview={isPreview}
